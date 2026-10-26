@@ -7,11 +7,11 @@
   <style>
     :root {
       --bg: #07141c;
-      --bg-2: #122935;
       --panel: rgba(16, 35, 46, 0.96);
       --panel-2: rgba(23, 49, 63, 0.96);
-      --accent: #e5c97d;
-      --accent-strong: #f8df9a;
+      --border: rgba(229, 201, 125, 0.72);
+      --gold: #e5c97d;
+      --gold-strong: #f8df9a;
       --text: #f5efe5;
       --muted: #d7c9a7;
       --good: #7fe2a1;
@@ -19,10 +19,6 @@
       --warning: #f6c76b;
       --card: #304b5a;
       --card-alt: #1c2e3d;
-      --border: rgba(229, 201, 125, 0.72);
-      --shadow: rgba(0, 0, 0, 0.28);
-      --blue: #49a7d9;
-      --purple: #b589e3;
     }
 
     * { box-sizing: border-box; }
@@ -32,8 +28,8 @@
       min-height: 100%;
       font-family: "Segoe UI", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
       background:
-        radial-gradient(circle at top, rgba(71, 100, 124, 0.30), transparent 40%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        radial-gradient(circle at top, rgba(71, 100, 124, 0.32), transparent 40%),
+        linear-gradient(180deg, #07141c 0%, #122935 100%);
       color: var(--text);
     }
 
@@ -43,21 +39,21 @@
       padding: 28px 16px;
     }
 
-    #app {
-      width: min(1000px, 100%);
+    .app {
+      width: min(980px, 100%);
       background: var(--panel);
       border: 2px solid var(--border);
       border-radius: 18px;
-      box-shadow: 0 22px 52px var(--shadow);
-      padding: 22px 18px 24px;
+      box-shadow: 0 22px 52px rgba(0, 0, 0, 0.28);
+      padding: 20px 16px 18px;
     }
 
     h1 {
       margin: 0 0 16px;
       text-align: center;
       letter-spacing: 0.08em;
-      color: var(--accent-strong);
-      font-size: clamp(1.9rem, 4vw, 3rem);
+      color: var(--gold-strong);
+      font-size: clamp(2rem, 4vw, 3rem);
     }
 
     .mode-box {
@@ -65,14 +61,14 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .mode-btn {
       border: 1px solid var(--border);
+      border-radius: 10px;
       background: linear-gradient(180deg, #264d62, #183549);
       color: var(--text);
-      border-radius: 10px;
       padding: 10px 18px;
       font-weight: 800;
       cursor: pointer;
@@ -84,29 +80,22 @@
       box-shadow: 0 0 0 2px rgba(248, 223, 154, 0.18);
     }
 
-    .mode-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.08);
-    }
-
     .toolbar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
     input {
       min-width: 220px;
-      padding: 11px 14px;
+      padding: 10px 12px;
       background: rgba(255,255,255,0.04);
       color: var(--text);
       border: 1px solid var(--border);
       border-radius: 10px;
       outline: none;
-      font-size: 1rem;
     }
 
     input::placeholder { color: rgba(255,255,255,0.46); }
@@ -114,12 +103,12 @@
     button {
       border: 1px solid var(--border);
       border-radius: 10px;
+      background: linear-gradient(180deg, #21465a, #142f3d);
+      color: var(--text);
       padding: 10px 16px;
       font-size: 0.98rem;
       font-weight: 700;
       cursor: pointer;
-      color: var(--text);
-      background: linear-gradient(180deg, #21465a, #142f3d);
       transition: transform 0.15s ease, filter 0.15s ease;
     }
 
@@ -128,8 +117,9 @@
       filter: brightness(1.08);
     }
 
-    button.secondary {
-      background: linear-gradient(180deg, #2a536a, #1c3d4e);
+    button.selected {
+      border-color: rgba(248, 223, 154, 0.8);
+      box-shadow: 0 0 0 2px rgba(248, 223, 154, 0.18);
     }
 
     button.danger {
@@ -137,63 +127,47 @@
       border-color: rgba(242, 157, 157, 0.6);
     }
 
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    #connStatus {
-      min-width: 110px;
-      text-align: center;
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-
     .panel {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(229,201,125,0.38);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(229, 201, 125, 0.38);
       border-radius: 12px;
       padding: 12px 14px;
       margin: 12px 0;
     }
 
-    #status {
-      min-height: 54px;
+    #status, #score, #connStatus {
+      min-height: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: var(--muted);
       font-weight: 800;
+      color: var(--muted);
     }
 
     #score {
-      text-align: center;
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--accent-strong);
+      color: var(--gold-strong);
     }
 
     #board {
-      display: none;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
       gap: 18px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
-    .player {
+    .player-box {
       background: var(--panel-2);
-      border: 1px solid rgba(229,201,125,0.42);
+      border: 1px solid rgba(229, 201, 125, 0.42);
       border-radius: 14px;
       padding: 14px 12px 12px;
       min-height: 240px;
     }
 
-    .player h2 {
+    .player-box h2 {
       margin: 0 0 14px;
       text-align: center;
-      color: var(--accent-strong);
+      color: var(--gold-strong);
       font-size: 1.12rem;
     }
 
@@ -202,13 +176,12 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      min-height: 128px;
+      min-height: 130px;
     }
 
     .card {
-      position: relative;
-      width: 78px;
-      height: 116px;
+      width: 82px;
+      height: 118px;
       border-radius: 14px;
       border: 2px solid var(--border);
       background: linear-gradient(180deg, var(--card), var(--card-alt));
@@ -216,13 +189,12 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 8px;
       font-weight: 800;
-      color: var(--text);
-      cursor: pointer;
       user-select: none;
-      transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      padding: 8px;
     }
 
     .card:hover {
@@ -234,6 +206,7 @@
       background: linear-gradient(180deg, #415d6f, #233647);
       color: #eff4fb;
       font-size: 1.7rem;
+      cursor: default;
     }
 
     .card.selected {
@@ -241,39 +214,23 @@
       box-shadow: 0 0 0 4px rgba(127, 226, 161, 0.18);
     }
 
-    .card.used {
-      opacity: 0.35;
-      transform: scale(0.96);
+    .card.disabled {
+      opacity: 0.5;
       cursor: default;
-    }
-
-    .solo-controls {
-      display: none;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 8px 0 12px;
-    }
-
-    #controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
+      transform: none;
     }
 
     #result {
       min-height: 34px;
-      margin: 12px 0 8px;
       text-align: center;
-      font-size: 1.1rem;
+      margin: 12px 0 8px;
+      font-size: 1.08rem;
       font-weight: 800;
       color: var(--warning);
     }
 
     #log {
-      min-height: 100px;
+      min-height: 120px;
       max-height: 220px;
       overflow-y: auto;
       white-space: pre-line;
@@ -281,16 +238,15 @@
       border: 1px solid rgba(229,201,125,0.4);
       border-radius: 8px;
       padding: 12px 14px;
-      line-height: 1.6;
+      line-height: 1.7;
       color: var(--muted);
-      font-size: 0.96rem;
     }
 
     .rules {
       display: grid;
-      grid-template-columns: repeat(3, minmax(130px, 1fr));
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
       gap: 10px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .rule {
@@ -300,15 +256,14 @@
       padding: 10px;
       text-align: center;
       font-weight: 700;
-      color: var(--text);
     }
 
     .rule .badge {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       margin-bottom: 8px;
       border-radius: 10px;
       border: 1px solid var(--border);
@@ -316,60 +271,61 @@
       font-size: 0.9rem;
     }
 
+    .hidden-multi,
+    .hidden-solo {
+      display: none;
+    }
+
     @media (max-width: 760px) {
       #board { grid-template-columns: 1fr; }
-      .toolbar, .solo-controls { flex-direction: column; align-items: stretch; }
-      input, button { width: 100%; }
+      .toolbar, .mode-box { flex-direction: column; }
+      button, input { width: 100%; }
       .rules { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div id="app">
+  <div class="app">
     <h1>皇帝牌</h1>
 
     <div class="mode-box">
-      <button id="modeMulti" class="mode-btn active">多人模式</button>
-      <button id="modeSolo" class="mode-btn">單人模式（VS 電腦）</button>
+      <button id="modeSolo" class="mode-btn active">單人模式</button>
+      <button id="modeMulti" class="mode-btn">多人模式</button>
     </div>
 
-    <div class="toolbar" id="multiToolbar">
-      <button id="btnCreate">建立新房間</button>
-      <input id="roomId" type="text" placeholder="輸入房間代碼" />
-      <button id="btnJoin" class="secondary">加入房間</button>
-      <button id="btnCopy" class="secondary">複製房間碼</button>
+    <div id="soloBar" class="toolbar">
+      <button id="btnRoleEmperor" class="selected">我當皇帝</button>
+      <button id="btnRoleSlave">我當奴隸</button>
+      <button id="btnStartSolo">開始單人遊戲</button>
+    </div>
+
+    <div id="multiBar" class="toolbar hidden-multi">
+      <button id="btnCreateRoom">建立房間</button>
+      <input id="roomInput" type="text" placeholder="輸入房間代碼" />
+      <button id="btnJoinRoom">加入房間</button>
+      <button id="btnCopyRoom">複製碼</button>
       <span id="connStatus">尚未連線</span>
     </div>
 
-    <div class="solo-controls" id="soloControls">
-      <button id="btnSoloEmperor">我當皇帝</button>
-      <button id="btnSoloSlave" class="secondary">我當奴隸</button>
-      <button id="btnSoloStart" class="secondary">開始單人對戰</button>
-    </div>
-
-    <div id="status" class="panel">狀態：請選擇模式並開始遊戲</div>
+    <div id="status" class="panel">選擇角色後開始遊戲</div>
     <div id="score" class="panel">分數：皇帝 0 - 0 奴隸</div>
 
     <div id="board">
-      <div class="player">
-        <h2 id="labelA">我方</h2>
-        <div id="handA" class="hand"></div>
+      <div class="player-box">
+        <h2 id="labelPlayer">我方</h2>
+        <div id="handPlayer" class="hand"></div>
       </div>
 
-      <div class="player">
-        <h2 id="labelB">對手</h2>
-        <div id="handB" class="hand"></div>
+      <div class="player-box">
+        <h2 id="labelEnemy">對手</h2>
+        <div id="handEnemy" class="hand"></div>
       </div>
     </div>
 
-    <div id="controls">
-      <button id="btnReset" class="danger">重置遊戲</button>
-    </div>
-
-    <div id="result">等待對戰開始</div>
+    <div id="result">等待開始</div>
 
     <div class="panel">
-      <div style="font-weight: 800; margin-bottom: 8px; color: var(--accent-strong);">遊戲規則</div>
+      <div style="font-weight:800; margin-bottom:8px; color:var(--gold-strong);">遊戲規則</div>
       <div class="rules">
         <div class="rule"><div class="badge">皇帝</div>皇帝 勝 奴隸</div>
         <div class="rule"><div class="badge">奴隸</div>奴隸 勝 市民</div>
@@ -389,46 +345,31 @@
     };
 
     const state = {
-      mode: 'multi',
-      role: null,
-      humanRole: null,
+      mode: 'solo',
+      playerRole: 'emperor',
+      myDeck: [],
+      enemyDeck: [],
+      mySelected: null,
+      enemySelected: null,
+      gameStarted: false,
+      roundLock: false,
+      score: { emperor: 0, slave: 0 },
       peer: null,
       conn: null,
-      gameStarted: false,
-      roundResolved: false,
-      selectedCardEl: null,
-      myPlayed: null,
-      oppPlayed: null,
-      score: { emperor: 0, slave: 0 },
-      deckA: [],
-      deckB: [],
-      pendingTimer: null,
-      turn: 'human'
+      isHost: false,
+      roomId: ''
     };
 
     const statusEl = document.getElementById('status');
     const scoreEl = document.getElementById('score');
-    const boardEl = document.getElementById('board');
     const resultEl = document.getElementById('result');
     const logEl = document.getElementById('log');
-    const handAEl = document.getElementById('handA');
-    const handBEl = document.getElementById('handB');
-    const roomInput = document.getElementById('roomId');
+    const handPlayer = document.getElementById('handPlayer');
+    const handEnemy = document.getElementById('handEnemy');
+    const labelPlayer = document.getElementById('labelPlayer');
+    const labelEnemy = document.getElementById('labelEnemy');
+    const roomInput = document.getElementById('roomInput');
     const connStatusEl = document.getElementById('connStatus');
-    const labelAEl = document.getElementById('labelA');
-    const labelBEl = document.getElementById('labelB');
-
-    const btnCreate = document.getElementById('btnCreate');
-    const btnJoin = document.getElementById('btnJoin');
-    const btnCopy = document.getElementById('btnCopy');
-    const btnReset = document.getElementById('btnReset');
-    const btnModeMulti = document.getElementById('modeMulti');
-    const btnModeSolo = document.getElementById('modeSolo');
-    const soloControls = document.getElementById('soloControls');
-    const multiToolbar = document.getElementById('multiToolbar');
-    const btnSoloEmperor = document.getElementById('btnSoloEmperor');
-    const btnSoloSlave = document.getElementById('btnSoloSlave');
-    const btnSoloStart = document.getElementById('btnSoloStart');
 
     function logMessage(text) {
       logEl.textContent += `${text}\n`;
@@ -447,349 +388,200 @@
       scoreEl.textContent = `分數：皇帝 ${state.score.emperor} - ${state.score.slave} 奴隸`;
     }
 
-    function createDeck() {
-      return ['皇帝', '奴隸', '市民', '市民'];
-    }
-
-    function resolveWinner(cardA, cardB) {
-      if (cardA === cardB) return 'tie';
-      return CARD_BEATS[cardA] === cardB ? 'emperor' : 'slave';
-    }
-
-    function resetRoundState() {
-      state.myPlayed = null;
-      state.oppPlayed = null;
-      state.selectedCardEl = null;
-      state.roundResolved = false;
-      resultEl.textContent = '新回合開始';
-      renderHands();
-    }
-
-    function setRoleLabels() {
-      if (state.mode === 'solo') {
-        if (state.role === 'emperor') {
-          labelAEl.textContent = '我（皇帝方）';
-          labelBEl.textContent = '電腦（奴隸方）';
-        } else {
-          labelAEl.textContent = '電腦（皇帝方）';
-          labelBEl.textContent = '我（奴隸方）';
-        }
-      } else {
-        if (state.role === 'emperor') {
-          labelAEl.textContent = '我（皇帝方）';
-          labelBEl.textContent = '對手（奴隸方）';
-        } else {
-          labelAEl.textContent = '對手（皇帝方）';
-          labelBEl.textContent = '我（奴隸方）';
-        }
+    function shuffleDeck(deck) {
+      const next = [...deck];
+      for (let i = next.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [next[i], next[j]] = [next[j], next[i]];
       }
+      return next;
     }
 
-    function renderHands() {
-      handAEl.innerHTML = '';
-      handBEl.innerHTML = '';
+    function createDeck() {
+      return shuffleDeck(['皇帝', '奴隸', '市民', '市民']);
+    }
 
-      const deckHuman = state.role === 'emperor' ? state.deckA : state.deckB;
-      const deckEnemy = state.role === 'emperor' ? state.deckB : state.deckA;
+    function removeCard(deck, card) {
+      const index = deck.indexOf(card);
+      if (index >= 0) deck.splice(index, 1);
+      return deck;
+    }
 
-      const humanCards = deckHuman || [];
-      const enemyCards = deckEnemy || [];
-
+    function updateRoleLabel() {
       if (state.mode === 'solo') {
-        if (state.role === 'emperor') {
-          humanCards.forEach((card) => {
-            const el = document.createElement('div');
-            el.className = 'card';
-            el.dataset.card = card;
-            el.textContent = card;
-            if (state.myPlayed && card === state.myPlayed) {
-              el.classList.add('used');
-              el.onclick = null;
-            } else {
-              el.onclick = () => selectLocalCard(el);
-            }
-            if (state.selectedCardEl === el) el.classList.add('selected');
-            handAEl.appendChild(el);
-          });
-
-          enemyCards.forEach((card) => {
-            const el = document.createElement('div');
-            el.className = 'card hidden';
-            if (state.oppPlayed && card === state.oppPlayed) {
-              el.classList.remove('hidden');
-              el.textContent = card;
-            } else {
-              el.textContent = '？';
-            }
-            handBEl.appendChild(el);
-          });
+        if (state.playerRole === 'emperor') {
+          labelPlayer.textContent = '我（皇帝方）';
+          labelEnemy.textContent = '電腦（奴隸方）';
         } else {
-          humanCards.forEach((card) => {
-            const el = document.createElement('div');
-            el.className = 'card';
-            el.dataset.card = card;
-            el.textContent = card;
-            if (state.myPlayed && card === state.myPlayed) {
-              el.classList.add('used');
-              el.onclick = null;
-            } else {
-              el.onclick = () => selectLocalCard(el);
-            }
-            if (state.selectedCardEl === el) el.classList.add('selected');
-            handBEl.appendChild(el);
-          });
-
-          enemyCards.forEach((card) => {
-            const el = document.createElement('div');
-            el.className = 'card hidden';
-            if (state.oppPlayed && card === state.oppPlayed) {
-              el.classList.remove('hidden');
-              el.textContent = card;
-            } else {
-              el.textContent = '？';
-            }
-            handAEl.appendChild(el);
-          });
+          labelPlayer.textContent = '我（奴隸方）';
+          labelEnemy.textContent = '電腦（皇帝方）';
         }
         return;
       }
 
-      if (state.role === 'emperor') {
-        humanCards.forEach((card) => {
-          const el = document.createElement('div');
-          el.className = 'card';
-          el.dataset.card = card;
-          el.textContent = card;
-          if (state.myPlayed && card === state.myPlayed) {
-            el.classList.add('used');
-            el.onclick = null;
-          } else {
-            el.onclick = () => selectLocalCard(el);
-          }
-          if (state.selectedCardEl === el) el.classList.add('selected');
-          handAEl.appendChild(el);
-        });
-
-        enemyCards.forEach((card) => {
-          const el = document.createElement('div');
-          el.className = 'card hidden';
-          if (state.oppPlayed && card === state.oppPlayed) {
-            el.classList.remove('hidden');
-            el.textContent = card;
-          } else {
-            el.textContent = '？';
-          }
-          handBEl.appendChild(el);
-        });
+      if (state.playerRole === 'emperor') {
+        labelPlayer.textContent = '我（皇帝方）';
+        labelEnemy.textContent = '對手（奴隸方）';
       } else {
-        humanCards.forEach((card) => {
-          const el = document.createElement('div');
-          el.className = 'card';
-          el.dataset.card = card;
-          el.textContent = card;
-          if (state.myPlayed && card === state.myPlayed) {
-            el.classList.add('used');
-            el.onclick = null;
-          } else {
-            el.onclick = () => selectLocalCard(el);
-          }
-          if (state.selectedCardEl === el) el.classList.add('selected');
-          handBEl.appendChild(el);
-        });
-
-        enemyCards.forEach((card) => {
-          const el = document.createElement('div');
-          el.className = 'card hidden';
-          if (state.oppPlayed && card === state.oppPlayed) {
-            el.classList.remove('hidden');
-            el.textContent = card;
-          } else {
-            el.textContent = '？';
-          }
-          handAEl.appendChild(el);
-        });
+        labelPlayer.textContent = '我（奴隸方）';
+        labelEnemy.textContent = '對手（皇帝方）';
       }
     }
 
-    function startNewMatch() {
-      state.deckA = createDeck();
-      state.deckB = createDeck();
-      state.score = { emperor: 0, slave: 0 };
+    function getMyDeck() {
+      return state.playerRole === 'emperor' ? state.myDeck : state.enemyDeck;
+    }
+
+    function getEnemyDeck() {
+      return state.playerRole === 'emperor' ? state.enemyDeck : state.myDeck;
+    }
+
+    function battleWinner(emperorCard, slaveCard) {
+      if (emperorCard === slaveCard) return 'tie';
+      return CARD_BEATS[emperorCard] === slaveCard ? 'emperor' : 'slave';
+    }
+
+    function renderHands() {
+      handPlayer.innerHTML = '';
+      handEnemy.innerHTML = '';
+
+      const myDeck = getMyDeck();
+      const enemyDeck = getEnemyDeck();
+
+      myDeck.forEach((card) => {
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.textContent = card;
+        el.dataset.card = card;
+        if (state.mySelected === card) {
+          el.classList.add('selected');
+        }
+        if (!state.gameStarted || state.roundLock || state.mySelected) {
+          el.classList.add('disabled');
+          el.onclick = null;
+        } else {
+          el.onclick = () => selectLocalCard(card, el);
+        }
+        handPlayer.appendChild(el);
+      });
+
+      enemyDeck.forEach((card) => {
+        const el = document.createElement('div');
+        el.className = 'card hidden';
+        if (state.enemySelected && card === state.enemySelected) {
+          el.classList.remove('hidden');
+          el.textContent = card;
+        } else {
+          el.textContent = '?';
+        }
+        handEnemy.appendChild(el);
+      });
+    }
+
+    function startSoloGame() {
+      state.mode = 'solo';
+      state.playerRole = document.getElementById('btnRoleEmperor').classList.contains('selected') ? 'emperor' : 'slave';
+      state.myDeck = createDeck();
+      state.enemyDeck = createDeck();
+      state.mySelected = null;
+      state.enemySelected = null;
       state.gameStarted = true;
-      state.myPlayed = null;
-      state.oppPlayed = null;
-      state.roundResolved = false;
-      state.turn = 'human';
-      boardEl.style.display = 'grid';
+      state.roundLock = false;
+      state.score = { emperor: 0, slave: 0 };
+      updateRoleLabel();
       updateScore();
-      setRoleLabels();
+      setStatus('遊戲開始，請出牌');
       resultEl.textContent = '輪到你出牌';
-      setStatus('對戰開始，請出牌');
-      logMessage('新遊戲開始');
+      logMessage('單人模式開始');
       renderHands();
     }
 
     function chooseAiCard() {
-      const aiDeck = state.role === 'emperor' ? state.deckB : state.deckA;
-      if (!aiDeck || aiDeck.length === 0) return null;
-
-      const prefer = ['皇帝', '奴隸', '市民'];
-      let pick = null;
-      for (const card of prefer) {
-        if (aiDeck.includes(card)) {
-          pick = card;
-          break;
-        }
+      const deck = getEnemyDeck();
+      if (!deck.length) return null;
+      const order = ['皇帝', '奴隸', '市民'];
+      for (const card of order) {
+        if (deck.includes(card)) return card;
       }
-      return pick || aiDeck[Math.floor(Math.random() * aiDeck.length)];
+      return deck[Math.floor(Math.random() * deck.length)];
     }
 
-    function finishSoloRound() {
-      if (!state.myPlayed || !state.oppPlayed || state.roundResolved) return;
+    function resolveSoloRound() {
+      if (!state.mySelected || !state.enemySelected) return;
 
-      const emperorCard = state.role === 'emperor' ? state.myPlayed : state.oppPlayed;
-      const slaveCard = state.role === 'slave' ? state.myPlayed : state.oppPlayed;
-      const winner = resolveWinner(emperorCard, slaveCard);
+      const myCard = state.mySelected;
+      const enemyCard = state.enemySelected;
+      const emperorCard = state.playerRole === 'emperor' ? myCard : enemyCard;
+      const slaveCard = state.playerRole === 'emperor' ? enemyCard : myCard;
+      const result = battleWinner(emperorCard, slaveCard);
 
-      const msg = { winner, emperor: emperorCard, slave: slaveCard };
-      showResult(msg);
-      state.roundResolved = true;
-
-      if (state.deckA.length === 0 || state.deckB.length === 0) {
-        endGame();
-        return;
-      }
-
-      setTimeout(() => {
-        resetRoundState();
-        state.turn = 'human';
-        setStatus('請出牌');
-        resultEl.textContent = '輪到你出牌';
-        renderHands();
-      }, 1200);
-    }
-
-    function playAiTurn() {
-      if (!state.gameStarted || state.mode !== 'solo') return;
-      const aiCard = chooseAiCard();
-      if (!aiCard) return;
-
-      state.oppPlayed = aiCard;
-      const aiDeck = state.role === 'emperor' ? state.deckB : state.deckA;
-      const idx = aiDeck.indexOf(aiCard);
-      if (idx !== -1) aiDeck.splice(idx, 1);
-
-      logMessage(`電腦出牌：${aiCard}`);
-      setStatus('電腦已出牌，請出牌');
-      renderHands();
-
-      if (state.myPlayed) {
-        finishSoloRound();
-      }
-    }
-
-    function selectLocalCard(cardEl) {
-      if (!state.gameStarted) return;
-      if (state.mode === 'solo' && state.turn !== 'human') return;
-      if (state.mode === 'multi' && (!state.conn || !state.conn.open || state.roundResolved)) return;
-      if (state.mode === 'multi' && state.myPlayed) return;
-      if (state.mode === 'solo' && state.myPlayed) return;
-
-      const card = cardEl.dataset.card;
-      const myDeck = state.role === 'emperor' ? state.deckA : state.deckB;
-      if (!myDeck.includes(card)) return;
-
-      if (state.selectedCardEl) state.selectedCardEl.classList.remove('selected');
-      state.selectedCardEl = cardEl;
-      cardEl.classList.add('selected');
-
-      state.myPlayed = card;
-      const idx = myDeck.indexOf(card);
-      if (idx !== -1) myDeck.splice(idx, 1);
-
-      if (state.mode === 'multi') {
-        const senderRole = state.role === 'emperor' ? '皇帝' : '奴隸';
-        state.conn.send({ type: 'play', player: state.role, card: state.myPlayed, sender: senderRole });
-        setStatus('已出牌，等待對手');
-        logMessage(`${senderRole} 方出牌：${state.myPlayed}`);
-        renderHands();
-        if (state.oppPlayed) revealMultiRound();
-        return;
-      }
-
-      const humanLabel = state.role === 'emperor' ? '皇帝' : '奴隸';
-      logMessage(`${humanLabel} 方出牌：${state.myPlayed}`);
-      setStatus('已出牌，等待電腦回應');
-      state.turn = 'ai';
-      renderHands();
-
-      setTimeout(() => {
-        playAiTurn();
-      }, 600);
-    }
-
-    function revealMultiRound() {
-      if (!state.myPlayed || !state.oppPlayed || state.roundResolved) return;
-
-      const emperorCard = state.role === 'emperor' ? state.myPlayed : state.oppPlayed;
-      const slaveCard = state.role === 'slave' ? state.myPlayed : state.oppPlayed;
-      const winner = resolveWinner(emperorCard, slaveCard);
-      const msg = { type: 'result', emperor: emperorCard, slave: slaveCard, winner };
-
-      if (state.role === 'emperor') {
-        state.conn.send(msg);
-      }
-
-      showResult(msg);
-      state.roundResolved = true;
-
-      if (state.deckA.length === 0 || state.deckB.length === 0) {
-        endGame();
-        return;
-      }
-
-      setTimeout(() => {
-        resetRoundState();
-        setStatus('請出牌');
-        resultEl.textContent = '輪到你出牌';
-        renderHands();
-      }, 1200);
-    }
-
-    function showResult(msg) {
-      let winnerText = '平手';
-      if (msg.winner === 'emperor') {
-        winnerText = '皇帝方勝';
+      if (result === 'emperor') {
         state.score.emperor += 1;
-      } else if (msg.winner === 'slave') {
-        winnerText = '奴隸方勝';
+      } else if (result === 'slave') {
         state.score.slave += 1;
       }
       updateScore();
 
-      if (state.mode === 'solo') {
-        if (state.role === 'emperor') {
-          if (msg.winner === 'emperor') resultEl.textContent = '你獲勝！';
-          else if (msg.winner === 'slave') resultEl.textContent = '你落敗！';
-          else resultEl.textContent = '這回合平手';
-        } else {
-          if (msg.winner === 'slave') resultEl.textContent = '你獲勝！';
-          else if (msg.winner === 'emperor') resultEl.textContent = '你落敗！';
-          else resultEl.textContent = '這回合平手';
-        }
+      removeCard(state.myDeck, myCard);
+      removeCard(state.enemyDeck, enemyCard);
+
+      if (state.playerRole === 'emperor') {
+        if (result === 'emperor') resultEl.textContent = '你獲勝！';
+        else if (result === 'slave') resultEl.textContent = '你落敗！';
+        else resultEl.textContent = '這回合平手';
       } else {
-        if (state.role === 'emperor') {
-          if (msg.winner === 'emperor') resultEl.textContent = '你獲勝！';
-          else if (msg.winner === 'slave') resultEl.textContent = '你落敗！';
-          else resultEl.textContent = '這回合平手';
-        } else {
-          if (msg.winner === 'slave') resultEl.textContent = '你獲勝！';
-          else if (msg.winner === 'emperor') resultEl.textContent = '你落敗！';
-          else resultEl.textContent = '這回合平手';
-        }
+        if (result === 'slave') resultEl.textContent = '你獲勝！';
+        else if (result === 'emperor') resultEl.textContent = '你落敗！';
+        else resultEl.textContent = '這回合平手';
       }
 
-      logMessage(`本回合：皇帝 ${msg.emperor} vs 奴隸 ${msg.slave}，結果：${winnerText}`);
+      logMessage(`本回合：你出 ${myCard}，電腦出 ${enemyCard}，結果：${result === 'tie' ? '平手' : result === 'emperor' ? '皇帝方勝' : '奴隸方勝'}`);
+      renderHands();
+
+      if (state.myDeck.length === 0 || state.enemyDeck.length === 0) {
+        setTimeout(endGame, 600);
+        return;
+      }
+
+      setTimeout(() => {
+        state.mySelected = null;
+        state.enemySelected = null;
+        state.roundLock = false;
+        setStatus('請出牌');
+        resultEl.textContent = '輪到你出牌';
+        renderHands();
+      }, 900);
+    }
+
+    function selectLocalCard(card, el) {
+      if (!state.gameStarted || state.roundLock || state.mySelected) return;
+
+      state.mySelected = card;
+      state.roundLock = true;
+      if (el) {
+        document.querySelectorAll('#handPlayer .card').forEach((node) => node.classList.remove('selected'));
+        el.classList.add('selected');
+      }
+
+      if (state.mode === 'solo') {
+        state.enemySelected = chooseAiCard();
+        logMessage(`你出牌：${card}，電腦出牌：${state.enemySelected}`);
+        setStatus('已出牌，結果確認中');
+        renderHands();
+        setTimeout(resolveSoloRound, 500);
+        return;
+      }
+
+      if (!state.conn || !state.conn.open) {
+        setStatus('連線尚未建立');
+        return;
+      }
+
+      const payload = { type: 'play', card };
+      state.conn.send(payload);
+      logMessage(`你出牌：${card}`);
+      setStatus('已出牌，等待對手');
+      renderHands();
     }
 
     function endGame() {
@@ -803,43 +595,138 @@
       resultEl.textContent = '遊戲結束';
       logMessage('遊戲結束');
       state.gameStarted = false;
-      state.roundResolved = true;
+      state.roundLock = true;
     }
 
-    function setupPeerConnection() {
+    function resetLocalState() {
+      state.myDeck = [];
+      state.enemyDeck = [];
+      state.mySelected = null;
+      state.enemySelected = null;
+      state.gameStarted = false;
+      state.roundLock = false;
+      state.score = { emperor: 0, slave: 0 };
+      updateScore();
+      handPlayer.innerHTML = '';
+      handEnemy.innerHTML = '';
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      document.getElementById('modeSolo').classList.toggle('active', mode === 'solo');
+      document.getElementById('modeMulti').classList.toggle('active', mode === 'multi');
+      document.getElementById('soloBar').classList.toggle('hidden-solo', mode !== 'solo');
+      document.getElementById('multiBar').classList.toggle('hidden-multi', mode !== 'multi');
+
+      if (state.peer) {
+        state.peer.destroy();
+        state.peer = null;
+      }
+      state.conn = null;
+      state.isHost = false;
+      state.roomId = '';
+      roomInput.value = '';
+      setConnStatus('尚未連線');
+
+      if (mode === 'solo') {
+        setStatus('選擇角色後開始遊戲');
+        resultEl.textContent = '等待開始';
+        resetLocalState();
+        updateRoleLabel();
+      } else {
+        setStatus('請建立或加入房間');
+        resultEl.textContent = '等待對戰開始';
+        resetLocalState();
+        updateRoleLabel();
+      }
+    }
+
+    function startMultiGame() {
+      state.mode = 'multi';
+      state.myDeck = createDeck();
+      state.enemyDeck = createDeck();
+      state.mySelected = null;
+      state.enemySelected = null;
+      state.gameStarted = true;
+      state.roundLock = false;
+      state.score = { emperor: 0, slave: 0 };
+      updateRoleLabel();
+      updateScore();
+      setStatus('連線成功，請出牌');
+      resultEl.textContent = '輪到你出牌';
+      logMessage('多人模式開始');
+      renderHands();
+    }
+
+    function handleIncomingMove(data) {
+      state.enemySelected = data.card;
+      const myCard = state.mySelected;
+      if (!myCard) {
+        setStatus('對手已出牌，請出牌');
+        renderHands();
+        return;
+      }
+
+      const emperorCard = state.playerRole === 'emperor' ? myCard : data.card;
+      const slaveCard = state.playerRole === 'emperor' ? data.card : myCard;
+      const winner = battleWinner(emperorCard, slaveCard);
+
+      if (winner === 'emperor') {
+        state.score.emperor += 1;
+      } else if (winner === 'slave') {
+        state.score.slave += 1;
+      }
+      updateScore();
+
+      removeCard(state.myDeck, myCard);
+      removeCard(state.enemyDeck, data.card);
+
+      if (state.playerRole === 'emperor') {
+        if (winner === 'emperor') resultEl.textContent = '你獲勝！';
+        else if (winner === 'slave') resultEl.textContent = '你落敗！';
+        else resultEl.textContent = '這回合平手';
+      } else {
+        if (winner === 'slave') resultEl.textContent = '你獲勝！';
+        else if (winner === 'emperor') resultEl.textContent = '你落敗！';
+        else resultEl.textContent = '這回合平手';
+      }
+
+      logMessage(`本回合：你出 ${myCard}，對手出 ${data.card}，結果：${winner === 'tie' ? '平手' : winner === 'emperor' ? '皇帝方勝' : '奴隸方勝'}`);
+      renderHands();
+
+      if (state.myDeck.length === 0 || state.enemyDeck.length === 0) {
+        setTimeout(endGame, 600);
+        return;
+      }
+
+      setTimeout(() => {
+        state.mySelected = null;
+        state.enemySelected = null;
+        state.roundLock = false;
+        setStatus('請出牌');
+        resultEl.textContent = '輪到你出牌';
+        renderHands();
+      }, 900);
+    }
+
+    function setupPeerEvents() {
+      if (!state.peer || !state.conn) return;
+
       state.conn.on('open', () => {
         setConnStatus('已連線');
-        setStatus('連線成功，等待雙方確認');
-        startNewMatch();
+        setStatus('連線成功，請出牌');
+        startMultiGame();
       });
 
       state.conn.on('data', (data) => {
         if (data.type === 'play') {
-          state.oppPlayed = data.card;
-          logMessage(`${data.player === 'emperor' ? '皇帝' : '奴隸'} 方出牌：${data.card}`);
-
-          if (state.myPlayed) {
-            revealMultiRound();
+          state.enemySelected = data.card;
+          logMessage(`對手出牌：${data.card}`);
+          renderHands();
+          if (state.mySelected) {
+            handleIncomingMove(data);
           } else {
             setStatus('對手已出牌，請出牌');
-          }
-
-          renderHands();
-        }
-
-        if (data.type === 'result') {
-          state.oppPlayed = data.slave;
-          showResult(data);
-          state.roundResolved = true;
-
-          if (state.deckA.length === 0 || state.deckB.length === 0) {
-            endGame();
-          } else {
-            setTimeout(() => {
-              resetRoundState();
-              setStatus('請出牌');
-              renderHands();
-            }, 1200);
           }
         }
       });
@@ -851,103 +738,49 @@
       });
     }
 
-    function handleSelectMode(mode) {
-      state.mode = mode;
-      btnModeMulti.classList.toggle('active', mode === 'multi');
-      btnModeSolo.classList.toggle('active', mode === 'solo');
-      multiToolbar.style.display = mode === 'multi' ? 'flex' : 'none';
-      soloControls.style.display = mode === 'solo' ? 'flex' : 'none';
+    document.getElementById('modeSolo').addEventListener('click', () => setMode('solo'));
+    document.getElementById('modeMulti').addEventListener('click', () => setMode('multi'));
 
-      if (state.peer) {
-        state.peer.destroy();
-        state.peer = null;
-      }
-      state.conn = null;
-      state.role = null;
-      state.gameStarted = false;
-      state.myPlayed = null;
-      state.oppPlayed = null;
-      state.roundResolved = false;
-      state.selectedCardEl = null;
-      state.turn = 'human';
-      clearTimeout(state.pendingTimer);
-      state.pendingTimer = null;
-      boardEl.style.display = 'none';
-      setConnStatus('尚未連線');
-      setStatus(mode === 'multi' ? '狀態：請建立或加入房間' : '狀態：請選擇你要當皇帝或奴隸');
-      resultEl.textContent = mode === 'multi' ? '等待對戰開始' : '等待單人對戰開始';
-      logMessage(mode === 'multi' ? '已切換到多人模式' : '已切換到單人模式');
-      updateScore();
-      handAEl.innerHTML = '';
-      handBEl.innerHTML = '';
-      labelAEl.textContent = '我方';
-      labelBEl.textContent = '對手';
-    }
+    document.getElementById('btnRoleEmperor').addEventListener('click', () => {
+      state.playerRole = 'emperor';
+      document.getElementById('btnRoleEmperor').classList.add('selected');
+      document.getElementById('btnRoleSlave').classList.remove('selected');
+      updateRoleLabel();
+    });
 
-    function startSoloGame(roleChoice) {
-      state.role = roleChoice;
-      state.mode = 'solo';
-      state.conn = null;
-      boardEl.style.display = 'grid';
-      setConnStatus('單人模式');
-      setRoleLabels();
-      startNewMatch();
-      if (roleChoice === 'slave') {
-        setStatus('你先後手，電腦先出牌');
-        state.turn = 'ai';
-        resultEl.textContent = '電腦先攻';
-        renderHands();
-        setTimeout(() => {
-          playAiTurn();
-        }, 600);
-      }
-    }
+    document.getElementById('btnRoleSlave').addEventListener('click', () => {
+      state.playerRole = 'slave';
+      document.getElementById('btnRoleSlave').classList.add('selected');
+      document.getElementById('btnRoleEmperor').classList.remove('selected');
+      updateRoleLabel();
+    });
 
-    btnModeMulti.onclick = () => handleSelectMode('multi');
-    btnModeSolo.onclick = () => handleSelectMode('solo');
+    document.getElementById('btnStartSolo').addEventListener('click', () => startSoloGame());
 
-    btnSoloEmperor.onclick = () => {
-      state.humanRole = 'emperor';
-      btnSoloEmperor.style.borderColor = 'rgba(248,223,154,0.8)';
-      btnSoloSlave.style.borderColor = 'rgba(229,201,125,0.72)';
-      state.role = 'emperor';
-    };
-
-    btnSoloSlave.onclick = () => {
-      state.humanRole = 'slave';
-      btnSoloSlave.style.borderColor = 'rgba(248,223,154,0.8)';
-      btnSoloEmperor.style.borderColor = 'rgba(229,201,125,0.72)';
-      state.role = 'slave';
-    };
-
-    btnSoloStart.onclick = () => {
-      const chosen = state.humanRole || 'emperor';
-      startSoloGame(chosen);
-    };
-
-    btnCreate.onclick = () => {
+    document.getElementById('btnCreateRoom').addEventListener('click', () => {
       if (state.peer) state.peer.destroy();
       state.peer = new Peer();
-      state.mode = 'multi';
-      state.role = 'emperor';
-      setRoleLabels();
+      state.isHost = true;
+      state.playerRole = 'emperor';
+      updateRoleLabel();
 
       state.peer.on('open', (id) => {
+        state.roomId = id;
         roomInput.value = id;
-        setConnStatus(`房間代碼：${id}`);
+        setConnStatus(`房間碼：${id}`);
         setStatus('等待對手加入...');
         logMessage(`房間建立成功：${id}`);
       });
 
       state.peer.on('connection', (connection) => {
         state.conn = connection;
-        state.role = 'emperor';
-        setRoleLabels();
-        setupPeerConnection();
+        state.playerRole = 'emperor';
+        updateRoleLabel();
+        setupPeerEvents();
       });
-    };
+    });
 
-    btnJoin.onclick = () => {
+    document.getElementById('btnJoinRoom').addEventListener('click', () => {
       const roomId = roomInput.value.trim();
       if (!roomId) {
         alert('請輸入房間代碼');
@@ -956,19 +789,19 @@
 
       if (state.peer) state.peer.destroy();
       state.peer = new Peer();
-      state.mode = 'multi';
-      state.role = 'slave';
-      setRoleLabels();
+      state.isHost = false;
+      state.playerRole = 'slave';
+      updateRoleLabel();
 
       state.peer.on('open', () => {
         state.conn = state.peer.connect(roomId);
         setConnStatus('連線中...');
         setStatus('嘗試連線到房主...');
-        setupPeerConnection();
+        setupPeerEvents();
       });
-    };
+    });
 
-    btnCopy.onclick = async () => {
+    document.getElementById('btnCopyRoom').addEventListener('click', async () => {
       const code = roomInput.value.trim();
       if (!code) {
         alert('目前沒有房間代碼可複製');
@@ -982,23 +815,12 @@
         setConnStatus('複製失敗');
         logMessage('複製房間碼失敗，請手動複製');
       }
-    };
+    });
 
-    btnReset.onclick = () => {
-      if (state.mode === 'multi') {
-        if (state.conn && state.conn.open) {
-          startNewMatch();
-        } else {
-          setStatus('請先建立或加入房間後再重置');
-        }
-      } else {
-        const chosen = state.humanRole || 'emperor';
-        startSoloGame(chosen);
-      }
-    };
-
-    handleSelectMode('multi');
-    logMessage('皇帝牌已準備就緒：可選擇多人模式或單人模式。');
+    updateRoleLabel();
+    updateScore();
+    setStatus('選擇角色後開始遊戲');
+    logMessage('皇帝牌已載入，支援單人與多人模式');
   </script>
 </body>
 </html>
