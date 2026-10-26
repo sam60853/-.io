@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>皇帝牌 E-CARD 線上對戰版</title>
+  <style>
+    :root {
+      --bg: #07141c;
+      --panel: #102430;
+      --panel-2: #173244;
+      --accent: #d8c38a;
+      --accent-strong: #f3d98d;
+      --text: #f5efe2;
+      --muted: #d0c4a4;
+      --good: #8ce5a3;
+      --bad: #ef9d9d;
+      --warning: #f6c76b;
+      --card: #2b3f4d;
+      --card-border: #d7b873;
+      --shadow: rgba(0, 0, 0, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #020b10 0%, #07151e 100%);
+      color: var(--text);
+      font-family: "Segoe UI", "Noto Sans TC", sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    #app {
+      width: min(980px, 100%);
+      background: var(--panel);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      box-shadow: 0 18px 40px var(--shadow);
+      padding: 20px 18px 26px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 16px;
+      color: var(--accent-strong);
+      letter-spacing: 0.08em;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    input {
+      min-width: 180px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      outline: none;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      background: linear-gradient(180deg, #1f424f, #132c3a);
+      color: var(--text);
+      font-weight: 600;
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    #connStatus {
+      margin-left: 6px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(216,195,138,0.5);
+      border-radius: 10px;
+      margin: 12px 0;
+      padding: 12px 10px;
+    }
+
+    #status {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #score {
+      text-align: center;
+      font-weight: 700;
+      color: var(--accent-strong);
+    }
+
+    #board {
+      display: none;
+      margin-top: 18px;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .player {
+      background: var(--panel-2);
+      border: 1px solid rgba(216,195,138,0.5);
+      border-radius: 12px;
+      padding: 14px 12px 12px;
+      min-height: 210px;
+    }
+
+    .player h2 {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--accent-strong);
+    }
+
+    .hand {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      min-height: 120px;
+    }
+
+    .card {
+      width: 74px;
+      height: 110px;
+      border-radius: 12px;
+      border: 2px solid var(--card-border);
+      background: linear-gradient(180deg, var(--card), #1b2d39);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+    }
+
+    .card.selected {
+      outline: 3px solid var(--good);
+      box-shadow: 0 0 0 3px rgba(140,229,163,0.25);
+    }
+
+    .card.hidden {
+      background: linear-gradient(180deg, #425c6d, #233642);
+      color: #dfe3e8;
+      font-size: 1.6rem;
+    }
+
+    .card.used {
+      opacity: 0.38;
+      transform: scale(0.96);
+      cursor: default;
+    }
+
+    #result {
+      min-height: 34px;
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 12px 0 8px;
+      color: var(--warning);
+    }
+
+    #log {
+      min-height: 84px;
+      max-height: 180px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.14);
+      border: 1px solid rgba(216,195,138,0.4);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.6;
+      white-space: pre-line;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      #board {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input, button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>皇帝牌 E-CARD 線上對戰版</h1>
+
+    <div class="toolbar">
+      <button id="btnCreate">建立新房間</button>
+      <input id="roomId" type="text" placeholder="輸入房間代碼" />
+      <button id="btnJoin">加入房間</button>
+      <span id="connStatus">尚未連線</span>
+    </div>
+
+    <div id="status" class="panel">狀態：請先建立或加入房間</div>
+    <div id="score" class="panel">分數：皇帝 0 - 0 奴隸</div>
+
+    <div id="board">
+      <div class="player" id="playerEmperor">
+        <h2>我（皇帝方）</h2>
+        <div id="handA" class="hand"></div>
+      </div>
+
+      <div class="player" id="playerSlave">
+        <h2>對手（奴隸方）</h2>
+        <div id="handB" class="hand"></div>
+      </div>
+    </div>
+
+    <div id="result">等待對戰開始</div>
+    <div id="log" class="panel"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js"></script>
+  <script>
+    const CARD_NAMES = ['皇帝', '奴隸', '市民'];
+    let role = null;
+    let peer = null;
+    let conn = null;
+
+    let localPlayed = null;
+    let remotePlayed = null;
+    let selectedCardEl = null;
+    let gameStarted = false;
+    let roundResolved = false;
+    let score = { emperor: 0, slave: 0 };
+    let deckA = [];
+    let deckB = [];
+
+    const statusEl = document.getElementById('status');
+    const scoreEl = document.getElementById('score');
+    const logEl = document.getElementById('log');
+    const resultEl = document.getElementById('result');
+    const boardEl = document.getElementById('board');
+    const handAEl = document.getElementById('handA');
+    const handBEl = document.getElementById('handB');
+    const roomInput = document.getElementById('roomId');
+    const connStatusEl = document.getElementById('connStatus');
+
+    const btnCreate = document.getElementById('btnCreate');
+    const btnJoin = document.getElementById('btnJoin');
+
+    function logMessage(text) {
+      logEl.textContent += `${text}\n`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateScore() {
+      scoreEl.textContent = `分數：皇帝 ${score.emperor} - ${score.slave} 奴隸`;
+    }
+
+    function resetBoardForNewMatch() {
+      localPlayed = null;
+      remotePlayed = null;
+      selectedCardEl = null;
+      roundResolved = false;
+      resultEl.textContent = '新回合開始';
+      renderHands();
+    }
+
+    function createDeck() {
+      return ['皇帝', '奴隸', '市民', '市民'];
+    }
+
+    function startGame() {
+      if (!conn || !conn.open) {
+        statusEl.textContent = '狀態：連線尚未建立，請稍後再試';
+        return;
+      }
+
+      deckA = createDeck();
+      deckB = createDeck();
+      score = { emperor: 0, slave: 0 };
+      updateScore();
+      gameStarted = true;
+      boardEl.style.display = 'grid';
+      statusEl.textContent = '狀態：對戰開始，請出牌';
+      resultEl.textContent = '輪到你出牌';
+      logMessage('新遊戲開始');
+      renderHands();
+    }
+
+    function renderHands() {
+      handAEl.innerHTML = '';
+      handBEl.innerHTML = '';
+
+      deckA.forEach((card, index) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card';
+        cardEl.dataset.card = card;
+        cardEl.dataset.index = index;
+        cardEl.textContent = role === 'emperor' ? card : '?';
+
+        if (role !== 'emperor') {
+          cardEl.classList.add('hidden');
+          cardEl.textContent = '？';
+        } else {
+          cardEl.onclick = () => selectLocalCard(cardEl);
+        }
+
+        if (localPlayed && role === 'emperor' && card === localPlayed) {
+          cardEl.classList.add('used');
+          cardEl.onclick = null;
+        }
+
+        handAEl.appendChild(cardEl);
+      });
+
+      deckB.forEach((card, index) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card';
+        cardEl.dataset.card = card;
+        cardEl.dataset.index = index;
+        cardEl.textContent = role === 'slave' ? card : '?';
+
+        if (role !== 'slave') {
+          cardEl.classList.add('hidden');
+          cardEl.textContent = '？';
+        } else {
+          cardEl.onclick = () => selectLocalCard(cardEl);
+        }
+
+        if (localPlayed && role === 'slave' && card === localPlayed) {
+          cardEl.classList.add('used');
+          cardEl.onclick = null;
+        }
+
+        handBEl.appendChild(cardEl);
+      });
+
+      if (role === 'emperor') {
+        const playedCardEls = Array.from(handAEl.children);
+        playedCardEls.forEach((el) => {
+          if (localPlayed && el.dataset.card === localPlayed) el.classList.add('used');
+        });
+      }
+
+      if (role === 'slave') {
+        const playedCardEls = Array.from(handBEl.children);
+        playedCardEls.forEach((el) => {
+          if (localPlayed && el.dataset.card === localPlayed) el.classList.add('used');
+        });
+      }
+
+      if (role === 'emperor') {
+        Array.from(handBEl.children).forEach((el) => {
+          if (remotePlayed && el.dataset.card === remotePlayed) el.textContent = remotePlayed;
+          else if (remotePlayed) el.textContent = '？';
+          else el.textContent = '？';
+        });
+      }
+
+      if (role === 'slave') {
+        Array.from(handAEl.children).forEach((el) => {
+          if (remotePlayed && el.dataset.card === remotePlayed) el.textContent = remotePlayed;
+          else if (remotePlayed) el.textContent = '？';
+          else el.textContent = '？';
+        });
+      }
+    }
+
+    function resolveWinner(cardA, cardB) {
+      if (cardA === cardB) return 'tie';
+
+      if (cardA === '皇帝' && cardB === '奴隸') return 'emperor';
+      if (cardA === '奴隸' && cardB === '市民') return 'emperor';
+      if (cardA === '市民' && cardB === '皇帝') return 'emperor';
+
+      if (cardA === '皇帝' && cardB === '市民') return 'slave';
+      if (cardA === '奴隸' && cardB === '皇帝') return 'slave';
+      if (cardA === '市民' && cardB === '奴隸') return 'slave';
+
+      return 'tie';
+    }
+
+    function selectLocalCard(cardEl) {
+      if (!gameStarted || !conn || !conn.open || roundResolved) return;
+
+      const myCards = role === 'emperor' ? deckA : deckB;
+      const card = cardEl.dataset.card;
+
+      if (!myCards.includes(card)) return;
+
+      if (selectedCardEl) {
+        selectedCardEl.classList.remove('selected');
+      }
+
+      selectedCardEl = cardEl;
+      cardEl.classList.add('selected');
+
+      if (localPlayed) {
+        return;
+      }
+
+      if (role === 'emperor') {
+        localPlayed = card;
+        const idx = deckA.indexOf(card);
+        if (idx !== -1) deckA.splice(idx, 1);
+      } else {
+        localPlayed = card;
+        const idx = deckB.indexOf(card);
+        if (idx !== -1) deckB.splice(idx, 1);
+      }
+
+      const sender = role === 'emperor' ? '皇帝' : '奴隸';
+      conn.send({ type: 'play', player: role, card: localPlayed, sender });
+      statusEl.textContent = '狀態：已出牌，等待對手';
+      logMessage(`${sender} 方出牌：${localPlayed}`);
+      renderHands();
+
+      if (remotePlayed) {
+        revealRound();
+      }
+    }
+
+    function revealRound() {
+      if (!localPlayed || !remotePlayed || roundResolved) return;
+
+      const emperorCard = role === 'emperor' ? localPlayed : remotePlayed;
+      const slaveCard = role === 'slave' ? localPlayed : remotePlayed;
+      const winner = resolveWinner(emperorCard, slaveCard);
+      const message = {
+        type: 'result',
+        emperor: emperorCard,
+        slave: slaveCard,
+        winner,
+        roundNo: Date.now()
+      };
+
+      if (role === 'emperor') {
+        conn.send(message);
+      }
+
+      showResult(message);
+      roundResolved = true;
+
+      if (deckA.length === 0 || deckB.length === 0) {
+        endGame();
+      } else {
+        setTimeout(() => {
+          localPlayed = null;
+          remotePlayed = null;
+          selectedCardEl = null;
+          roundResolved = false;
+          resultEl.textContent = '新回合開始';
+          statusEl.textContent = '狀態：請出牌';
+          renderHands();
+        }, 1100);
+      }
+    }
+
+    function showResult(msg) {
+      let winnerText = '平手';
+      if (msg.winner === 'emperor') {
+        winnerText = '皇帝方勝';
+        score.emperor += 1;
+      } else if (msg.winner === 'slave') {
+        winnerText = '奴隸方勝';
+        score.slave += 1;
+      }
+
+      updateScore();
+
+      if (role === 'emperor') {
+        if (msg.winner === 'emperor') {
+          resultEl.textContent = '你獲勝！';
+        } else if (msg.winner === 'slave') {
+          resultEl.textContent = '你落敗！';
+        } else {
+          resultEl.textContent = '這回合平手';
+        }
+      } else {
+        if (msg.winner === 'slave') {
+          resultEl.textContent = '你獲勝！';
+        } else if (msg.winner === 'emperor') {
+          resultEl.textContent = '你落敗！';
+        } else {
+          resultEl.textContent = '這回合平手';
+        }
+      }
+
+      logMessage(`本回合：皇帝 ${msg.emperor} vs 奴隸 ${msg.slave}，結果：${winnerText}`);
+    }
+
+    function endGame() {
+      if (score.emperor > score.slave) {
+        statusEl.textContent = '狀態：遊戲結束，皇帝方獲勝';
+      } else if (score.slave > score.emperor) {
+        statusEl.textContent = '狀態：遊戲結束，奴隸方獲勝';
+      } else {
+        statusEl.textContent = '狀態：遊戲結束，雙方平手';
+      }
+
+      logMessage('遊戲結束');
+      resultEl.textContent = '遊戲結束';
+      gameStarted = false;
+      roundResolved = true;
+    }
+
+    function setupConnection() {
+      conn.on('open', () => {
+        connStatusEl.textContent = '已連線';
+        statusEl.textContent = '狀態：連線成功，等待雙方確認';
+        startGame();
+      });
+
+      conn.on('data', (data) => {
+        if (data.type === 'play') {
+          remotePlayed = data.card;
+          const senderName = data.player === 'emperor' ? '皇帝' : '奴隸';
+          logMessage(`${senderName} 方出牌：${data.card}`);
+
+          if (localPlayed) {
+            revealRound();
+          } else {
+            statusEl.textContent = '狀態：對手已出牌，請出牌';
+          }
+
+          renderHands();
+        }
+
+        if (data.type === 'result') {
+          remotePlayed = data.slave;
+          if (role === 'slave') {
+            localPlayed = data.slave;
+          }
+          showResult(data);
+          roundResolved = true;
+
+          if (deckA.length === 0 || deckB.length === 0) {
+            endGame();
+          } else {
+            setTimeout(() => {
+              localPlayed = null;
+              remotePlayed = null;
+              selectedCardEl = null;
+              roundResolved = false;
+              resultEl.textContent = '新回合開始';
+              statusEl.textContent = '狀態：請出牌';
+              renderHands();
+            }, 1100);
+          }
+        }
+      });
+
+      conn.on('close', () => {
+        connStatusEl.textContent = '連線中斷';
+        statusEl.textContent = '狀態：對手已離線';
+        resultEl.textContent = '連線中斷';
+      });
+    }
+
+    btnCreate.onclick = () => {
+      peer = new Peer();
+      peer.on('open', (id) => {
+        roomInput.value = id;
+        connStatusEl.textContent = `房間代碼：${id}`;
+        statusEl.textContent = '狀態：等待對手加入...';
+        role = 'emperor';
+        logMessage(`房間建立成功：${id}`);
+      });
+
+      peer.on('connection', (c) => {
+        conn = c;
+        setupConnection();
+      });
+    };
+
+    btnJoin.onclick = () => {
+      const roomId = roomInput.value.trim();
+      if (!roomId) {
+        alert('請輸入房間代碼');
+        return;
+      }
+
+      peer = new Peer();
+      peer.on('open', () => {
+        conn = peer.connect(roomId);
+        role = 'slave';
+        connStatusEl.textContent = '連線中...';
+        statusEl.textContent = '狀態：嘗試連線到房主...';
+        setupConnection();
+      });
+    };
+  </script>
+</body>
+</html>
