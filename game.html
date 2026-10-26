@@ -289,21 +289,21 @@
     <h1>皇帝牌</h1>
 
     <div class="mode-box">
-      <button id="modeSolo" class="mode-btn active">單人模式</button>
-      <button id="modeMulti" class="mode-btn">多人模式</button>
+      <button id="modeSolo" class="mode-btn active" type="button">單人模式</button>
+      <button id="modeMulti" class="mode-btn" type="button">多人模式</button>
     </div>
 
     <div id="soloBar" class="toolbar">
-      <button id="btnRoleEmperor" class="selected">我當皇帝</button>
-      <button id="btnRoleSlave">我當奴隸</button>
-      <button id="btnStartSolo">開始單人遊戲</button>
+      <button id="btnRoleEmperor" class="selected" type="button">我當皇帝</button>
+      <button id="btnRoleSlave" type="button">我當奴隸</button>
+      <button id="btnStartSolo" type="button">開始單人遊戲</button>
     </div>
 
     <div id="multiBar" class="toolbar hidden-multi">
-      <button id="btnCreateRoom">建立房間</button>
+      <button id="btnCreateRoom" type="button">建立房間</button>
       <input id="roomInput" type="text" placeholder="輸入 5 位數房間碼" maxlength="5" inputmode="numeric" />
-      <button id="btnJoinRoom">加入房間</button>
-      <button id="btnCopyRoom">複製碼</button>
+      <button id="btnJoinRoom" type="button">加入房間</button>
+      <button id="btnCopyRoom" type="button">複製碼</button>
       <span id="connStatus">尚未連線</span>
     </div>
 
@@ -371,14 +371,6 @@
     const roomInput = document.getElementById('roomInput');
     const connStatusEl = document.getElementById('connStatus');
 
-    function generateRoomCode() {
-      return String(Math.floor(10000 + Math.random() * 90000));
-    }
-
-    function sanitizeRoomCode(value) {
-      return String(value || '').replace(/\D/g, '').slice(0, 5);
-    }
-
     function logMessage(text) {
       logEl.textContent += `${text}\n`;
       logEl.scrollTop = logEl.scrollHeight;
@@ -390,6 +382,14 @@
 
     function setConnStatus(text) {
       connStatusEl.textContent = text;
+    }
+
+    function sanitizeRoomCode(value) {
+      return String(value || '').replace(/\D/g, '').slice(0, 5);
+    }
+
+    function generateRoomCode() {
+      return String(Math.floor(10000 + Math.random() * 90000));
     }
 
     function updateScore() {
@@ -508,9 +508,7 @@
       const deck = getEnemyDeck();
       if (!deck.length) return null;
       const order = ['皇帝', '奴隸', '市民'];
-      for (const card of order) {
-        if (deck.includes(card)) return card;
-      }
+      for (const card of order) if (deck.includes(card)) return card;
       return deck[Math.floor(Math.random() * deck.length)];
     }
 
@@ -523,11 +521,8 @@
       const slaveCard = state.playerRole === 'emperor' ? enemyCard : myCard;
       const result = battleWinner(emperorCard, slaveCard);
 
-      if (result === 'emperor') {
-        state.score.emperor += 1;
-      } else if (result === 'slave') {
-        state.score.slave += 1;
-      }
+      if (result === 'emperor') state.score.emperor += 1;
+      else if (result === 'slave') state.score.slave += 1;
       updateScore();
 
       removeCard(state.myDeck, myCard);
@@ -619,6 +614,21 @@
       handEnemy.innerHTML = '';
     }
 
+    function detachPeer() {
+      if (state.conn) {
+        try { state.conn.close(); } catch (error) {}
+        state.conn = null;
+      }
+      if (state.peer) {
+        try { state.peer.destroy(); } catch (error) {}
+        state.peer = null;
+      }
+      state.isHost = false;
+      state.roomId = '';
+      roomInput.value = '';
+      setConnStatus('尚未連線');
+    }
+
     function setMode(mode) {
       state.mode = mode;
       document.getElementById('modeSolo').classList.toggle('active', mode === 'solo');
@@ -626,15 +636,7 @@
       document.getElementById('soloBar').classList.toggle('hidden-solo', mode !== 'solo');
       document.getElementById('multiBar').classList.toggle('hidden-multi', mode !== 'multi');
 
-      if (state.peer) {
-        state.peer.destroy();
-        state.peer = null;
-      }
-      state.conn = null;
-      state.isHost = false;
-      state.roomId = '';
-      roomInput.value = '';
-      setConnStatus('尚未連線');
+      detachPeer();
 
       if (mode === 'solo') {
         setStatus('選擇角色後開始遊戲');
@@ -679,11 +681,8 @@
       const slaveCard = state.playerRole === 'emperor' ? data.card : myCard;
       const winner = battleWinner(emperorCard, slaveCard);
 
-      if (winner === 'emperor') {
-        state.score.emperor += 1;
-      } else if (winner === 'slave') {
-        state.score.slave += 1;
-      }
+      if (winner === 'emperor') state.score.emperor += 1;
+      else if (winner === 'slave') state.score.slave += 1;
       updateScore();
 
       removeCard(state.myDeck, myCard);
@@ -717,9 +716,8 @@
       }, 900);
     }
 
-    function setupPeerEvents() {
-      if (!state.peer || !state.conn) return;
-
+    function bindConnection(connection) {
+      state.conn = connection;
       state.conn.on('open', () => {
         setConnStatus('已連線');
         setStatus('連線成功，請出牌');
@@ -727,15 +725,12 @@
       });
 
       state.conn.on('data', (data) => {
-        if (data.type === 'play') {
+        if (data && data.type === 'play') {
           state.enemySelected = data.card;
           logMessage(`對手出牌：${data.card}`);
           renderHands();
-          if (state.mySelected) {
-            handleIncomingMove(data);
-          } else {
-            setStatus('對手已出牌，請出牌');
-          }
+          if (state.mySelected) handleIncomingMove(data);
+          else setStatus('對手已出牌，請出牌');
         }
       });
 
@@ -743,6 +738,13 @@
         setConnStatus('連線中斷');
         setStatus('對手已離線');
         resultEl.textContent = '連線中斷';
+        state.conn = null;
+      });
+
+      state.conn.on('error', (error) => {
+        console.error('Peer connection error:', error);
+        setConnStatus('連線錯誤');
+        setStatus('連線發生錯誤，請重新嘗試');
       });
     }
 
@@ -766,9 +768,11 @@
     document.getElementById('btnStartSolo').addEventListener('click', () => startSoloGame());
 
     document.getElementById('btnCreateRoom').addEventListener('click', () => {
-      if (state.peer) state.peer.destroy();
-
       const roomCode = generateRoomCode();
+      if (state.peer) {
+        try { state.peer.destroy(); } catch (error) {}
+      }
+
       state.peer = new Peer(roomCode);
       state.isHost = true;
       state.playerRole = 'emperor';
@@ -776,19 +780,23 @@
       roomInput.value = roomCode;
       updateRoleLabel();
 
-      state.peer.on('open', (id) => {
-        state.roomId = id;
-        roomInput.value = id;
-        setConnStatus(`房間碼：${id}`);
+      state.peer.on('open', () => {
+        state.roomId = roomCode;
+        roomInput.value = roomCode;
+        setConnStatus(`房間碼：${roomCode}`);
         setStatus('等待對手加入...');
-        logMessage(`房間建立成功：${id}`);
+        logMessage(`房間建立成功：${roomCode}`);
       });
 
       state.peer.on('connection', (connection) => {
-        state.conn = connection;
-        state.playerRole = 'emperor';
-        updateRoleLabel();
-        setupPeerEvents();
+        state.isHost = true;
+        bindConnection(connection);
+      });
+
+      state.peer.on('error', (error) => {
+        console.error('Peer host error:', error);
+        setConnStatus('房間失敗');
+        setStatus('房間建立失敗，請稍後再試');
       });
     });
 
@@ -799,7 +807,10 @@
         return;
       }
 
-      if (state.peer) state.peer.destroy();
+      if (state.peer) {
+        try { state.peer.destroy(); } catch (error) {}
+      }
+
       state.peer = new Peer();
       state.isHost = false;
       state.playerRole = 'slave';
@@ -807,10 +818,16 @@
       updateRoleLabel();
 
       state.peer.on('open', () => {
-        state.conn = state.peer.connect(roomId);
+        const connection = state.peer.connect(roomId);
+        bindConnection(connection);
         setConnStatus('連線中...');
         setStatus('嘗試連線到房主...');
-        setupPeerEvents();
+      });
+
+      state.peer.on('error', (error) => {
+        console.error('Peer join error:', error);
+        setConnStatus('連線失敗');
+        setStatus('無法連線到房間，請確認房間碼');
       });
     });
 
@@ -831,8 +848,7 @@
     });
 
     roomInput.addEventListener('input', (event) => {
-      const cleaned = sanitizeRoomCode(event.target.value);
-      event.target.value = cleaned;
+      event.target.value = sanitizeRoomCode(event.target.value);
     });
 
     updateRoleLabel();
