@@ -1,212 +1,566 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<title>皇帝牌 E-CARD｜心理戰試煉 PRO</title>
-<style>
-:root{color-scheme:dark;--bg:#080d19;--panel:#111a2c;--panel2:#18243a;--line:#2b3b56;--gold:#f7c65c;--gold2:#c78d25;--text:#f4f7fc;--muted:#9eacc2;--green:#56e39a;--red:#ff7188;--blue:#91caff;--shadow:rgba(3,8,18,.58)}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#253758 0,transparent 55%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC",system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}a{color:inherit;text-decoration:none}button,input{font:inherit}button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:3px}.app{width:min(1160px,100% - 28px);margin:0 auto;padding:28px 0 34px}header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px}.eyebrow{font-size:.72rem;letter-spacing:.22em;color:var(--gold);font-weight:800}h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.1;margin:.4rem 0 .25rem}.subtitle{margin:0;color:var(--muted);max-width:650px}.top-actions{display:flex;align-items:center;gap:12px}.pill{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.8rem;color:var(--muted)}.mode-bar{display:flex;gap:10px;flex-wrap:wrap}.mode-btn{border:1px solid var(--line);background:#101a2d;color:var(--text);padding:10px 16px;border-radius:12px;font-weight:800;cursor:pointer}.mode-btn.active{background:linear-gradient(135deg,#e4b85e,#d78b1d);color:#160f06;border-color:transparent}.players{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}.player-card,.panel{background:linear-gradient(145deg,#172238,#101827);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 24px var(--shadow)}.player-card{padding:16px 18px}.player-card.active{border-color:rgba(124,160,255,.85);box-shadow:0 0 0 1px rgba(145,202,255,.32),0 18px 24px var(--shadow)}.player-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.player-name{font-size:.72rem;letter-spacing:.18em;color:var(--muted);font-weight:800}.hand-count{font-size:.75rem;color:var(--gold);font-weight:700}.role{font-size:1.3rem;font-weight:800;margin-bottom:12px}.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(247,198,92,.12);border:1px solid rgba(247,198,92,.38);color:var(--gold);font-size:.75rem;letter-spacing:.08em}.stats{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.8rem}.panel{padding:20px;margin-bottom:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:1rem;margin:0 0 15px}.section-title .small{font-weight:500;color:var(--muted)}.ai-tell{display:flex;gap:13px;align-items:center;background:#0b1220;border:1px solid #263650;border-radius:14px;padding:13px 15px;margin-bottom:18px}.tell-emoji{font-size:2rem;min-width:42px;text-align:center}.tell-copy{flex:1}.tell-title{font-size:.75rem;letter-spacing:.18em;color:var(--gold);font-weight:800}.tell-text{margin-top:6px;font-size:.96rem;color:var(--text)}.tell-note{font-size:.78rem;color:var(--muted);margin-top:4px}.arena{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}.card-slot{min-height:205px;border:1px dashed #3a4c68;border-radius:16px;display:grid;place-items:center;padding:12px;background:linear-gradient(180deg,#0f1a2c,#0d1730)}.muted-note{color:var(--muted);text-align:center;line-height:1.7}.vs{display:grid;place-items:center;color:var(--gold);font-weight:900;letter-spacing:.2em;font-size:1.1rem}.hand-area{margin-top:22px}.hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.hand-card{position:relative;min-height:132px;padding:12px 5px 10px;border-radius:13px;border:1px solid rgba(151,174,214,.25);background:linear-gradient(180deg,#1a2946,#0e1729);color:var(--text);cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;box-shadow:0 10px 15px rgba(0,0,0,.18)}.hand-card:hover{transform:translateY(-2px);border-color:rgba(145,202,255,.72)}.hand-card.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(247,198,92,.25),0 10px 18px rgba(0,0,0,.22)}.playing-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;padding:12px 10px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#162641,#0d1a2a);overflow:hidden}.playing-card.back{background:linear-gradient(135deg,#1e2b44,#0d1626);border-color:rgba(255,255,255,.12)}.playing-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 20%,rgba(255,255,255,.08),transparent 32%);pointer-events:none}.card-sub{position:relative;z-index:1;color:var(--muted);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}.card-symbol{position:relative;z-index:1;font-size:2.45rem;line-height:1;text-align:center;color:var(--gold)}.card-name{position:relative;z-index:1;font-size:1rem;font-weight:800;text-align:center}.card-role{position:relative;z-index:1;font-size:.72rem;color:var(--muted);text-align:center}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;transition:transform .15s ease,opacity .15s ease;}.btn:hover{transform:translateY(-1px)}.btn:disabled{cursor:not-allowed;opacity:.5}.btn-primary{background:linear-gradient(135deg,#e4b85e,#d78b1d);color:#160f06}.btn-quiet{background:#101a2d;border:1px solid var(--line);color:var(--text)}.status{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(145,202,255,.08);border:1px solid rgba(145,202,255,.18);color:var(--text);font-size:.93rem}.status.win{background:rgba(86,227,154,.08);border-color:rgba(86,227,154,.25)}.status.lose{background:rgba(255,113,136,.08);border-color:rgba(255,113,136,.25)}.narrative{margin-top:16px;padding:15px 16px;border-left:3px solid var(--gold);background:#0c1422;border-radius:0 12px 12px 0}.narrative h3{font-size:.75rem;letter-spacing:.15em;color:var(--gold);margin:0 0 8px}.narrative p{margin:0;color:var(--text)}.settlement{margin-top:16px;padding:18px;border-radius:16px;border:1px solid rgba(247,198,92,.3);background:linear-gradient(180deg,rgba(247,198,92,.06),rgba(247,198,92,.02));display:none}.settlement.active{display:block}.settlement h2{margin:0 0 6px;color:var(--gold)}.verdict{margin:0 0 10px;font-weight:800}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.bottom-grid .panel{margin:0}.history{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-height:280px;overflow:auto}.history li{display:grid;gap:4px;padding:10px 12px;border-radius:12px;background:#0d1727;border:1px solid #24324b}.history .meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.72rem}.history .desc{font-size:.9rem}.score-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}.score-box{padding:12px;border-radius:12px;border:1px solid var(--line);background:#0d1727}.score-box span{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;margin-bottom:8px}.score-box strong{font-size:1.55rem}.rules{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:8px}.rules strong{color:var(--text)}.emoji-panel{margin-top:18px}.emoji-quick{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px}.emoji-btn{border:1px solid rgba(145,202,255,.28);background:rgba(145,202,255,.08);border-radius:12px;padding:10px 12px;font-size:1.35rem;cursor:pointer;transition:transform .12s ease,border-color .12s ease}.emoji-btn:hover{transform:translateY(-1px);border-color:rgba(247,198,92,.38)}.emoji-composer{display:flex;gap:10px}.emoji-composer input{flex:1;min-width:0;border:1px solid var(--line);background:#0b1220;border-radius:12px;padding:12px 14px;color:var(--text)}.emoji-composer .btn{min-width:112px}.emoji-feed{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px;max-height:180px;overflow:auto}.emoji-feed li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#0d1727;border:1px solid #24324b;color:var(--text)}.emoji-feed .feed-meta{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.72rem}.feed-msg{font-size:1.05rem;font-weight:700}.footer{margin-top:18px;color:var(--muted);text-align:center;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase}@keyframes reveal{from{opacity:.2;transform:translateY(5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}.reveal{animation:reveal .24s ease}@media(max-width:720px){.app{width:min(100% - 20px,600px);padding-top:20px}.players,.bottom-grid{grid-template-columns:1fr}.panel{padding:15px}.card-slot{min-height:170px;padding:8px}.playing-card{min-height:130px}.hand{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.emoji-composer{flex-direction:column}.emoji-composer .btn{width:100%}} 
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>皇帝牌 E-CARD｜心理戰試煉 PRO</title>
+  <style>
+    :root{
+      --bg:#080d19;--panel:#111a2c;--panel2:#18243a;--line:#2b3b56;--gold:#f7c65c;--gold2:#c78d25;--text:#f4f7fc;--muted:#9eacc2;--green:#56e39a;--red:#ff7188;--blue:#91caff;--shadow:rgba(3,8,18,.58)
+    }
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#253758 0,transparent 55%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC",system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5} a{color:inherit;text-decoration:none} button,input{font:inherit} button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+    .app{width:min(1160px,100% - 28px);margin:0 auto;padding:28px 0 34px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+    .eyebrow{font-size:.72rem;letter-spacing:.22em;color:var(--gold);font-weight:800}.subtitle{margin:0;color:var(--muted);max-width:650px}
+    h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.1;margin:.4rem 0 .25rem}
+    .top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .pill{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.8rem;color:var(--muted)}
+    .mode-bar{display:flex;gap:10px;flex-wrap:wrap}
+    .mode-btn{border:1px solid var(--line);background:#101a2d;color:var(--text);padding:10px 16px;border-radius:12px;font-weight:800;cursor:pointer}
+    .mode-btn.active{background:linear-gradient(135deg,#e4b85e,#d78b1d);color:#160f06;border-color:transparent}
+    .players{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+    .player-card,.panel{background:linear-gradient(145deg,#172238,#101827);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 24px var(--shadow)}
+    .player-card{padding:16px 18px}.player-card.active{border-color:rgba(124,160,255,.85);box-shadow:0 0 0 1px rgba(145,202,255,.32),0 18px 24px var(--shadow)}
+    .player-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .player-name{font-size:.72rem;letter-spacing:.18em;color:var(--muted);font-weight:800}
+    .hand-count{font-size:.75rem;color:var(--gold);font-weight:700}
+    .role{font-size:1.3rem;font-weight:800;margin-bottom:12px}.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(247,198,92,.12);border:1px solid rgba(247,198,92,.38);color:var(--gold);font-size:.75rem;letter-spacing:.08em}
+    .panel{padding:20px;margin-bottom:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:1rem;margin:0 0 15px}.section-title .small{font-weight:500;color:var(--muted)}
+    .ai-tell{display:flex;gap:13px;align-items:center;background:#0b1220;border:1px solid #263650;border-radius:14px;padding:13px 15px;margin-bottom:18px}.tell-emoji{font-size:2rem;min-width:42px;text-align:center}.tell-copy{flex:1}.tell-title{font-size:.75rem;letter-spacing:.18em;color:var(--gold);font-weight:800}.tell-text{margin-top:6px;font-size:.96rem;color:var(--text)}.tell-note{font-size:.78rem;color:var(--muted);margin-top:4px}.arena{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}.card-slot{min-height:205px;border:1px dashed #3a4c68;border-radius:16px;display:grid;place-items:center;padding:12px;background:linear-gradient(180deg,#0f1a2c,#0d1730)}.muted-note{color:var(--muted);text-align:center;line-height:1.7}.vs{display:grid;place-items:center;color:var(--gold);font-weight:900;letter-spacing:.2em;font-size:1.1rem}.hand-area{margin-top:22px}.hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.hand-card{position:relative;min-height:132px;padding:12px 5px 10px;border-radius:13px;border:1px solid rgba(151,174,214,.25);background:linear-gradient(180deg,#1a2946,#0e1729);color:var(--text);cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;box-shadow:0 10px 15px rgba(0,0,0,.18)}.hand-card:hover{transform:translateY(-2px);border-color:rgba(145,202,255,.72)}.hand-card.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(247,198,92,.25),0 10px 18px rgba(0,0,0,.22)}.playing-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;padding:12px 10px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#162641,#0d1a2a);overflow:hidden}.playing-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 20%,rgba(255,255,255,.08),transparent 32%);pointer-events:none}.card-sub{position:relative;z-index:1;color:var(--muted);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}.card-symbol{position:relative;z-index:1;font-size:2.45rem;line-height:1;text-align:center;color:var(--gold)}.card-name{position:relative;z-index:1;font-size:1rem;font-weight:800;text-align:center}.card-role{position:relative;z-index:1;font-size:.72rem;color:var(--muted);text-align:center}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;transition:transform .15s ease,opacity .15s ease;}.btn:hover{transform:translateY(-1px)}.btn:disabled{cursor:not-allowed;opacity:.5}.btn-primary{background:linear-gradient(135deg,#e4b85e,#d78b1d);color:#160f06}.btn-quiet{background:#101a2d;border:1px solid var(--line);color:var(--text)}.status{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(145,202,255,.08);border:1px solid rgba(145,202,255,.18);color:var(--text);font-size:.93rem}.status.win{background:rgba(86,227,154,.08);border-color:rgba(86,227,154,.25)}.status.lose{background:rgba(255,113,136,.08);border-color:rgba(255,113,136,.25)}.narrative{margin-top:16px;padding:15px 16px;border-left:3px solid var(--gold);background:#0c1422;border-radius:0 12px 12px 0}.narrative h3{font-size:.75rem;letter-spacing:.15em;color:var(--gold);margin:0 0 8px}.narrative p{margin:0;color:var(--text)}.settlement{margin-top:16px;padding:18px;border-radius:16px;border:1px solid rgba(247,198,92,.3);background:linear-gradient(180deg,rgba(247,198,92,.06),rgba(247,198,92,.02));display:none}.settlement.active{display:block}.settlement h2{margin:0 0 6px;color:var(--gold)}.verdict{margin:0 0 10px;font-weight:800}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.bottom-grid .panel{margin:0}.history{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-height:280px;overflow:auto}.history li{display:grid;gap:4px;padding:10px 12px;border-radius:12px;background:#0d1727;border:1px solid #24324b}.history .meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.72rem}.history .desc{font-size:.9rem}.score-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}.score-box{padding:12px;border-radius:12px;border:1px solid var(--line);background:#0d1727}.score-box span{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;margin-bottom:8px}.score-box strong{font-size:1.55rem}.rules{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:8px}.rules strong{color:var(--text)}.emoji-panel{margin-top:18px}.emoji-quick{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px}.emoji-btn{border:1px solid rgba(145,202,255,.28);background:rgba(145,202,255,.08);border-radius:12px;padding:10px 12px;font-size:1.35rem;cursor:pointer;transition:transform .12s ease,border-color .12s ease}.emoji-btn:hover{transform:translateY(-1px);border-color:rgba(247,198,92,.38)}.emoji-composer{display:flex;gap:10px}.emoji-composer input{flex:1;min-width:0;border:1px solid var(--line);background:#0b1220;border-radius:12px;padding:12px 14px;color:var(--text)}.emoji-composer .btn{min-width:112px}.emoji-feed{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px;max-height:180px;overflow:auto}.emoji-feed li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#0d1727;border:1px solid #24324b;color:var(--text)}.emoji-feed .feed-meta{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.72rem}.feed-msg{font-size:1.05rem;font-weight:700}.footer{margin-top:18px;color:var(--muted);text-align:center;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase}@keyframes reveal{from{opacity:.2;transform:translateY(5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}.reveal{animation:reveal .24s ease}@media(max-width:720px){.app{width:min(100% - 20px,600px);padding-top:20px}.players,.bottom-grid{grid-template-columns:1fr}.panel{padding:15px}.card-slot{min-height:170px;padding:8px}.playing-card{min-height:130px}.hand{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.emoji-composer{flex-direction:column}.emoji-composer .btn{width:100%}}
+  </style>
 </head>
 <body>
-<main class="app">
-<header>
-<div>
-<div class="eyebrow">STRATEGY · BLUFF · FATE</div>
-<h1>皇帝牌 <span style="color:var(--gold)">E-CARD</span></h1>
-<p class="subtitle">讀懂表情、管理風險，在唯一的關鍵瞬間做出決定。</p>
-</div>
-<div class="top-actions">
-<div class="mode-bar" aria-label="遊戲模式">
-<button class="mode-btn active" id="singleModeBtn" type="button">單人模式</button>
-<button class="mode-btn" id="multiModeBtn" type="button">多人模式</button>
-</div>
-<div class="pill" id="roundBadge">第 1 / 5 回合</div>
-</div>
-</header>
-<section class="players" aria-label="對戰角色">
-<article class="player-card active" id="playerPanel"><div class="player-top"><span class="player-name" id="playerNameLabel">PLAYER</span><span class="hand-count" id="playerCount">剩餘 5 張</span></div><div class="role" id="playerRole">皇帝方</div><div class="tag" id="playerRoleHint">主動選牌</div></article>
-<article class="player-card" id="aiPanel"><div class="player-top"><span class="player-name" id="aiNameLabel">AI OPPONENT</span><span class="hand-count" id="aiCount">剩餘 5 張</span></div><div class="role" id="aiRole">奴隸方</div><div class="tag" id="aiRoleHint">觀察訊號</div></article>
-</section>
-<section class="panel">
-<h2 class="section-title"><span>對決桌</span><span class="small" id="phaseLabel">選擇一張手牌</span></h2>
-<div class="ai-tell" aria-live="polite"><div class="tell-emoji" id="tellEmoji">🤔</div><div class="tell-copy"><div class="tell-title">AI 表情訊號 · 心理戰</div><div class="tell-text" id="tellText">對手正在讀取你的目光，準備偷偷計算你的下一步。</div><div class="tell-note" id="tellNote">任何細微的信號，都可能成為勝負關鍵。</div></div></div>
-<div class="arena"><div class="card-slot" id="playerSlot"><div class="muted-note">選擇下方手牌<br>準備出牌</div></div><div class="vs">VS</div><div class="card-slot" id="aiSlot"><div class="muted-note">AI 牌面<br>待揭示</div></div></div>
-<div class="hand-area"><h2 class="section-title"><span>你的手牌</span><span class="small" id="selectedLabel">尚未選牌</span></h2><div class="hand" id="playerHand" aria-label="可選手牌"></div></div>
-<div class="actions"><button class="btn btn-primary" id="playBtn" disabled hidden>出牌對決</button><button class="btn btn-quiet" id="restartBtn">重新開始</button></div>
-<div class="status" id="status" role="status" aria-live="polite">新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。</div>
-<section class="narrative" aria-live="polite"><h3>NARRATIVE · 劇情紀錄</h3><p id="narrativeText">房間裡的燈光映著十張牌。真正的勝負不在牌有多強，而在皇帝與奴隸的心理戰裡，誰能先看清對方的表情。</p></section>
-</section>
-<section class="panel emoji-panel" aria-live="polite">
-<h2 class="section-title"><span>表情發送系統</span><span class="small" id="emojiCount">0 則訊號</span></h2>
-<div class="emoji-quick" aria-label="快速選擇表情">
-<button type="button" class="emoji-btn" data-emoji="😎">😎</button>
-<button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
-<button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
-<button type="button" class="emoji-btn" data-emoji="😏">😏</button>
-<button type="button" class="emoji-btn" data-emoji="👏">👏</button>
-<button type="button" class="emoji-btn" data-emoji="👑">👑</button>
-<button type="button" class="emoji-btn" data-emoji="💬">💬</button>
-<button type="button" class="emoji-btn" data-emoji="🎯">🎯</button>
-</div>
-<div class="emoji-composer">
-<input id="emojiInput" type="text" maxlength="8" value="😎" placeholder="輸入表情或訊號" aria-label="發送表情或訊號">
-<button class="btn btn-primary" id="emojiSendBtn" type="button">發送表情</button>
-</div>
-<ul class="emoji-feed" id="emojiFeed" aria-label="表情訊號紀錄"></ul>
-</section>
-<section class="settlement" id="settlement" aria-live="polite"><h2 id="settlementTitle">本局結算</h2><p class="verdict" id="settlementVerdict"></p><p id="settlementText"></p><p id="settlementRule"></p></section>
-<div class="bottom-grid">
-<section class="panel"><h2 class="section-title">對戰紀錄 <span class="small" id="recordCount">0 筆</span></h2><div class="score-row"><div class="score-box"><span>玩家獲勝累計</span><strong id="playerScore">0</strong></div><div class="score-box"><span>AI 獲勝累計</span><strong id="aiScore">0</strong></div></div><ul class="history" id="historyList"></ul></section>
-<section class="panel"><h2 class="section-title">規則速覽</h2><ul class="rules"><li><strong>皇帝</strong>擊敗市民。</li><li><strong>市民</strong>擊敗奴隸。</li><li><strong>奴隸</strong>擊敗皇帝。</li><li>每回合都要判斷 AI 的表情信號與手牌風險。</li><li>訊號系統可以在戰場中快速發送表情做心理戰。</li></ul></section>
-</div>
-<div class="footer">E-CARD PRO · 單檔 HTML / CSS / JavaScript · 無需安裝套件</div>
-</main>
-<script>
-"use strict";
-const CARD=Object.freeze({EMPEROR:"EMPEROR",CITIZEN:"CITIZEN",SLAVE:"SLAVE"});
-const META=Object.freeze({EMPEROR:{name:"皇帝",symbol:"♛",subtitle:"權力的象徵"},CITIZEN:{name:"市民",symbol:"♟",subtitle:"平凡的一員"},SLAVE:{name:"奴隸",symbol:"⚔",subtitle:"低聲絕地"}});
-const ROLE=Object.freeze({EMPEROR:"EMPEROR",SLAVE:"SLAVE"});
-const EMOJIS=["😎","🤔","🔥","😏","👏","👑","💬","🎯","😶","😮","😬","👍","💥","⚡","✨","😌"];
-const $=id=>document.getElementById(id);
-const state={round:1,mode:"single",turnOwner:"PLAYER",playerRole:ROLE.EMPEROR,aiRole:ROLE.SLAVE,playerHand:[],aiHand:[],selectedCardId:null,playerPlayed:null,aiPlayed:null,history:[],phase:"READY",busy:false,aiSecretCardId:null,aiTell:null,playerScore:0,aiScore:0,emojiHistory:[],settlement:null};
-function shuffle(array){const a=[...array];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function updateNames(){
-  if(state.mode === "multi"){
-    $("playerNameLabel").textContent = "PLAYER 1";
-    $("aiNameLabel").textContent = "PLAYER 2";
-    $("playerRole").textContent = state.playerRole===ROLE.EMPEROR?"皇帝方":"奴隸方";
-    $("aiRole").textContent = state.aiRole===ROLE.EMPEROR?"皇帝方":"奴隸方";
-    $("playerRoleHint").textContent = state.turnOwner==="PLAYER" ? "輪到你出牌" : "等待對手";
-    $("aiRoleHint").textContent = state.turnOwner==="OPPONENT" ? "輪到你出牌" : "等待對手";
-  }else{
-    $("playerNameLabel").textContent = "PLAYER";
-    $("aiNameLabel").textContent = "AI OPPONENT";
-    $("playerRole").textContent = state.playerRole===ROLE.EMPEROR?"皇帝方":"奴隸方";
-    $("aiRole").textContent = state.aiRole===ROLE.EMPEROR?"皇帝方":"奴隸方";
-    $("playerRoleHint").textContent = state.playerRole===ROLE.EMPEROR?"主動選牌":"逆轉可能";
-    $("aiRoleHint").textContent = state.aiRole===ROLE.EMPEROR?"主動施壓":"觀察訊號";
-  }
-}
-function setupHands(){
-  const emperor={id:"emperor-01",type:CARD.EMPEROR};
-  const slave={id:"slave-01",type:CARD.SLAVE};
-  const citizens=shuffle(Array.from({length:8},(_,i)=>({id:`citizen-${String(i+1).padStart(2,"0")}`,type:CARD.CITIZEN})));
+  <main class="app">
+    <header>
+      <div>
+        <div class="eyebrow">STRATEGY · BLUFF · FATE</div>
+        <h1>皇帝牌 <span style="color:var(--gold)">E-CARD</span></h1>
+        <p class="subtitle">讀懂表情、管理風險，在唯一的關鍵瞬間做出決定。</p>
+      </div>
+      <div class="top-actions">
+        <div class="mode-bar" aria-label="遊戲模式">
+          <button class="mode-btn active" id="singleModeBtn" type="button">單人模式</button>
+          <button class="mode-btn" id="multiModeBtn" type="button">多人模式</button>
+        </div>
+        <div class="pill" id="roundBadge">第 1 / 5 回合</div>
+      </div>
+    </header>
 
-  if(state.mode === "multi"){
-    const playerSpecial = ROLE.EMPEROR;
-    const aiSpecial = ROLE.SLAVE;
-    state.playerRole = ROLE.EMPEROR;
-    state.aiRole = ROLE.SLAVE;
-    state.playerHand = shuffle([emperor, ...citizens.slice(0,4)]);
-    state.aiHand = shuffle([slave, ...citizens.slice(4,8)]);
-  }else{
-    state.playerRole = Math.random() < 0.5 ? ROLE.EMPEROR : ROLE.SLAVE;
-    state.aiRole = state.playerRole===ROLE.EMPEROR ? ROLE.SLAVE : ROLE.EMPEROR;
-    const playerSpecial = state.playerRole===ROLE.EMPEROR ? emperor : slave;
-    const aiSpecial = state.playerRole===ROLE.EMPEROR ? slave : emperor;
-    const playerCitizens = citizens.slice(0,4);
-    const aiCitizens = citizens.slice(4,8);
-    state.playerHand = shuffle([playerSpecial, ...playerCitizens]);
-    state.aiHand = shuffle([aiSpecial, ...aiCitizens]);
-  }
+    <section class="players" aria-label="對戰角色">
+      <article class="player-card active" id="playerPanel">
+        <div class="player-top">
+          <span class="player-name" id="playerNameLabel">PLAYER</span>
+          <span class="hand-count" id="playerCount">剩餘 5 張</span>
+        </div>
+        <div class="role" id="playerRole">皇帝方</div>
+        <div class="tag" id="playerRoleHint">主動選牌</div>
+      </article>
+      <article class="player-card" id="aiPanel">
+        <div class="player-top">
+          <span class="player-name" id="aiNameLabel">AI OPPONENT</span>
+          <span class="hand-count" id="aiCount">剩餘 5 張</span>
+        </div>
+        <div class="role" id="aiRole">奴隸方</div>
+        <div class="tag" id="aiRoleHint">觀察訊號</div>
+      </article>
+    </section>
 
-  state.playerPlayed=null;
-  state.aiPlayed=null;
-  state.selectedCardId=null;
-  state.phase="READY";
-  state.turnOwner="PLAYER";
-  state.aiSecretCardId=null;
-  state.aiTell={emoji:"🤔",text:"對手正在掩飾意圖……",note:"線索可能真實，也可能誤導。",hintedType:null};
-}
-const TELLS={EMPEROR:[{emoji:"😎",text:"對手看起來胸有成竹。",note:"自信可能代表強牌，也可能是刻意演給你看。"},{emoji:"👑",text:"對手似乎想展示王者氣勢。",note:"如果他知道自己掌握局勢，這樣的表情不一定是假裝。"},{emoji:"🔥",text:"對手像是準備一場大逆轉。",note:"這種熱血感往往意味著他鎖定了某種強牌。"}],CITIZEN:[{emoji:"🤔",text:"對手似乎在權衡你將如何出牌。",note:"他不是完全確定，只是在試圖模擬你的選擇。"},{emoji:"😶",text:"對手的表情很平靜，像是沒有輪到他發力。",note:"這種沉穩經常意味著他握著中等牌。"},{emoji:"💬",text:"對手像是在等你先露出破綻。",note:"最危險的不是他有多少牌，而是他知道你會怎麼選。"}],SLAVE:[{emoji:"😏",text:"對手似乎藏著一個秘密計畫。",note:"奴隸格外會偏向低調與試探，你要警惕反擊。"},{emoji:"😠",text:"對手的表情有些不安，像是在壓住激動。",note:"這通常代表他想要在最後一刻翻盤。"},{emoji:"🎯",text:"對手像是在對著某個目標發狠。",note:"敵方可能已經計算好補刀路線。"}]};
-function getPlayedTypes(side){return state.history.map(h=>h[side+"Card"]);} 
-function specialStillHeld(hand){return hand.some(c=>c.type===CARD.EMPEROR||c.type===CARD.SLAVE);} 
-function chooseAICard(){if(!state.aiHand.length)throw new Error("AI 沒有可出的牌");const opponentPlayed=state.history.map(h=>h.playerCard);const playerSpecialAlreadyUsed=opponentPlayed.some(t=>t===CARD.EMPEROR||t===CARD.SLAVE);const aiSpecial=state.aiHand.find(c=>c.type===CARD.EMPEROR||c.type===CARD.SLAVE);const aiCitizens=state.aiHand.filter(c=>c.type===CARD.CITIZEN);if(aiSpecial){const aiIsEmperor=state.aiRole===ROLE.EMPEROR;const opponentSpecial=state.playerRole===ROLE.EMPEROR?CARD.EMPEROR:CARD.SLAVE;const opponentSpecialSeen=opponentPlayed.includes(opponentSpecial);if(opponentSpecialSeen && aiIsEmperor && aiSpecial.type===CARD.EMPEROR)return aiSpecial;if(opponentSpecialSeen && !aiIsEmperor && aiSpecial.type===CARD.SLAVE)return aiSpecial;if(!playerSpecialAlreadyUsed && aiCitizens.length && Math.random()<0.78)return aiCitizens[Math.floor(Math.random()*aiCitizens.length)];if(aiCitizens.length && Math.random()<0.28)return aiCitizens[Math.floor(Math.random()*aiCitizens.length)];return aiSpecial;}return state.aiHand[Math.floor(Math.random()*state.aiHand.length)];}
-function prepareAIRead(){if(!state.aiHand.length){state.aiSecretCardId=null;state.aiTell={emoji:"😶",text:"對手暫時沒有更多線索。",note:"本局的心理戰已經結束。",hintedType:null};return;}const intended=chooseAICard();state.aiSecretCardId=intended.id;const honest=Math.random()<.68;const alternatives=Object.values(CARD).filter(t=>t!==intended.type);const hinted=honest?intended.type:alternatives[Math.floor(Math.random()*alternatives.length)];const tell=TELLS[hinted][Math.floor(Math.random()*TELLS[hinted].length)];state.aiTell={...tell,hintedType:hinted,honest};}
-function resolveRound(player,ai){if(player===ai)return player===CARD.CITIZEN?"DRAW":"INVALID";const beats={[CARD.EMPEROR]:CARD.CITIZEN,[CARD.CITIZEN]:CARD.SLAVE,[CARD.SLAVE]:CARD.EMPEROR};return beats[player]===ai?"PLAYER_WIN":beats[ai]===player?"AI_WIN":"INVALID";}
-function generateNarrative(pc,ac,result,round){const stories={"EMPEROR_CITIZEN":"皇帝的威壓籠罩全場，市民只能暫時退讓。","CITIZEN_EMPEROR":"市民抬頭迎向皇帝，但這一回合仍由權力壓過微弱的聲音。","CITIZEN_SLAVE":"市民抓住奴隸露出的破綻，反擊未能成功。","SLAVE_CITIZEN":"奴隸的利刃被市民看穿，最後的機會悄然溜走。","SLAVE_EMPEROR":"奴隸終於等到那一刻。看似不可撼動的皇帝，被最卑微的人推翻。","EMPEROR_SLAVE":"皇帝與奴隸正面相遇，這一次皇帝的威勢未能阻止反叛。","CITIZEN_CITIZEN":"兩張市民牌相遇，雙方都沒有取得優勢，僵局仍在延續."};let s=stories[`${pc}_${ac}`]||"兩張牌在桌面上相遇，命運等待下一個決定。";if(result==="PLAYER_WIN")s+=" 這一回合，你掌握了主動權。";else if(result==="AI_WIN")s+=" 對手把優勢維持住了，接下來要更小心。";else s+=" 這一回合雙方都沒有讓步，局勢持續拉扯。";return `第 ${round} 回合：${s}`;}
-function cardMarkup(card,back=false){if(back)return '<div class="playing-card back reveal"><div class="card-sub">E-CARD</div><div class="card-symbol">?</div><div class="card-name">未知</div></div>';const m=META[card.type];return `<div class="playing-card reveal"><div class="card-sub">${m.name}</div><div class="card-symbol">${m.symbol}</div><div class="card-name">${m.name}</div><div class="card-role">${m.subtitle}</div></div>`;}
-function renderHand(){const host=$("playerHand");host.innerHTML="";state.playerHand.forEach(card=>{const m=META[card.type];const b=document.createElement("button");b.type="button";b.className=`hand-card${state.selectedCardId===card.id?" selected":""}`;b.setAttribute("aria-label",`${m.name}牌`);b.innerHTML=`<div class="playing-card reveal"><div class="card-sub">${m.name}</div><div class="card-symbol">${m.symbol}</div><div class="card-name">${m.name}</div><div class="card-role">${m.subtitle}</div></div>`;b.addEventListener("click",()=>selectCard(card.id));host.appendChild(b);});$("playerCount").textContent=`剩餘 ${state.playerHand.length} 張`;$("aiCount").textContent=`剩餘 ${state.aiHand.length} 張`;$("selectedLabel").textContent=state.selectedCardId?`已選：${META[state.playerHand.find(c=>c.id===state.selectedCardId).type].name}`:"尚未選牌";}
-function renderHistory(){const list=$("historyList");list.innerHTML="";$("recordCount").textContent=`${state.history.length} 筆`;$("playerScore").textContent=state.playerScore;$("aiScore").textContent=state.aiScore;if(!state.history.length){list.innerHTML='<li><div class="meta"><span>系統</span><span>待開始</span></div><div class="desc">本局尚未產生對戰紀錄。</div></li>';return;}state.history.slice().reverse().forEach(entry=>{const li=document.createElement("li");li.innerHTML=`<div class="meta"><span>${entry.side}</span><span>${entry.round}</span></div><div class="desc">${entry.text}</div>`;list.appendChild(li);});}
-function renderTell(){const t=state.aiTell||{emoji:"🤔",text:"對手正在掩飾意圖……",note:"線索可能真實，也可能誤導。"};$("tellEmoji").textContent=t.emoji;$("tellText").textContent=t.text;$("tellNote").textContent=t.note;}
-function render(){
-  updateNames();
-  $("roundBadge").textContent=`第 ${Math.min(state.round,5)} / 5 回合`;
-  $("phaseLabel").textContent=state.phase==="READY"?"選擇一張手牌":state.phase==="REVEALED"?"本回合揭示中":state.phase==="WAITING_OPPONENT"?"等待玩家 2 出牌":"牌局結束";
-  $("playerSlot").innerHTML=state.playerPlayed?cardMarkup(state.playerPlayed):'<div class="muted-note">選擇下方手牌<br>準備出牌</div>';
-  $("aiSlot").innerHTML=state.aiPlayed?cardMarkup(state.aiPlayed):'<div class="muted-note">AI 牌面<br>待揭示</div>';
-  renderHand();renderHistory();renderTell();renderEmojiFeed();
-}
-function setStatus(message,kind=""){const el=$("status");el.className=`status${kind?" "+kind:""}`;el.textContent=message;}
-function renderEmojiFeed(){const feed=$("emojiFeed");const count=$("emojiCount");count.textContent=`${state.emojiHistory.length} 則訊號`;feed.innerHTML="";if(!state.emojiHistory.length){feed.innerHTML='<li><div class="feed-meta"><span>系統</span></div><div class="feed-msg">尚未發送任何表情</div></li>';return;}state.emojiHistory.slice(0,8).forEach(item=>{const li=document.createElement("li");li.innerHTML=`<div class="feed-meta"><span>${item.source}</span><span>${item.time}</span></div><div class="feed-msg">${item.emoji}</div>`;feed.appendChild(li);});}
-function pushEmojiSignal(emoji,source="PLAYER"){const clean=(emoji||"💬").trim()||"💬";const item={emoji:clean,source,time:new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})};state.emojiHistory.unshift(item);state.emojiHistory=state.emojiHistory.slice(0,8);renderEmojiFeed();return item;}
-function sendEmoji(){const input=$("emojiInput");const value=(input.value||"").trim();const emojiValue=value || EMOJIS[Math.floor(Math.random()*EMOJIS.length)];input.value=emojiValue;pushEmojiSignal(emojiValue,"你");setStatus(`你發送了 ${emojiValue}，心理戰訊號已同步。`);window.setTimeout(()=>{const aiReply=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];pushEmojiSignal(aiReply,"AI");},420);} 
-function selectCard(id){if(state.phase!=="READY"||state.busy)return;const c=state.playerHand.find(x=>x.id===id);if(!c)return;if(state.selectedCardId===id){playRound();return;}state.selectedCardId=id;setStatus(`已選擇 ${META[c.type].name}，點擊再次確認出牌。`);render();}
-function settleGame(winnerRole, reason){state.phase="FINISHED";const winner=winnerRole===state.playerRole?"PLAYER":"AI";const won=winner==="PLAYER";const title=winnerRole===ROLE.EMPEROR?"皇帝方獲勝結算":"奴隸方獲勝結算";$("settlementTitle").textContent=title;$("settlementVerdict").textContent=won?"恭喜你贏得本局。":"本局由 AI 取得勝利。";$("settlementText").textContent=won?"你在心理戰中抓住了關鍵訊號，成功確立優勢。":"AI 在模擬判斷與節奏控制上更勝一籌。";$("settlementRule").textContent=`結算依據：${reason}`;$("settlement").classList.add("active");state.settlement={winner,winnerRole,title};$("narrativeText").textContent+=` 結算：${title}。${$("settlementText").textContent}`;setStatus(`${title}。${won?"你贏得本局！":"AI 贏得本局。"} 本局結束，即將重新發牌（累積勝場紀錄保留）。`,won?"win":"lose");}
-function playRound(){
-  if(state.phase!=="READY"||state.busy||!state.selectedCardId)return;
-  const pc=state.playerHand.find(c=>c.id===state.selectedCardId);
-  if(!pc){setStatus("找不到所選卡牌，請重新選牌。","lose");return;}
-  state.busy=true;
-  state.playerPlayed=pc;
-  state.playerHand=state.playerHand.filter(c=>c.id!==pc.id);
+    <section class="panel">
+      <h2 class="section-title"><span>對決桌</span><span class="small" id="phaseLabel">選擇一張手牌</span></h2>
+      <div class="ai-tell" aria-live="polite">
+        <div class="tell-emoji" id="tellEmoji">🤔</div>
+        <div class="tell-copy">
+          <div class="tell-title">AI 表情訊號 · 心理戰</div>
+          <div class="tell-text" id="tellText">對手正在讀取你的目光，準備偷偷計算你的下一步。</div>
+          <div class="tell-note" id="tellNote">任何細微的信號，都可能成為勝負關鍵。</div>
+        </div>
+      </div>
 
-  if(state.mode === "multi"){
-    state.phase="WAITING_OPPONENT";
-    state.turnOwner="OPPONENT";
-    state.selectedCardId = null;
-    setStatus("玩家 2 請出牌。","");
-    render();
-    state.busy=false;
-    return;
-  }
+      <div class="arena">
+        <div class="card-slot" id="playerSlot"><div class="muted-note">選擇下方手牌<br>準備出牌</div></div>
+        <div class="vs">VS</div>
+        <div class="card-slot" id="aiSlot"><div class="muted-note">AI 牌面<br>待揭示</div></div>
+      </div>
 
-  const aiCard=chooseAICard();
-  state.aiPlayed=aiCard;state.aiHand=state.aiHand.filter(c=>c.id!==aiCard.id);state.phase="REVEALED";const result=resolveRound(pc.type,aiCard.type);const story=generateNarrative(pc.type,aiCard.type,result,state.round);$("narrativeText").textContent=story;state.history.push({side:"你",round:state.round,text:`你出 ${META[pc.type].name}，AI 出 ${META[aiCard.type].name}，${result==="PLAYER_WIN"?"你勝出。":result==="AI_WIN"?"AI 勝出。":"平手。"}`});if(result==="PLAYER_WIN"){state.playerScore++;}else if(result==="AI_WIN"){state.aiScore++;}if(result==="PLAYER_WIN"||result==="AI_WIN"){const winnerRole=result==="PLAYER_WIN"?state.playerRole:state.aiRole;const reason=result==="PLAYER_WIN"?"你成功利用牌型優勢將勝負拉回手中。":"AI 透過更強的牌面與節奏壓制了你。";state.busy=false;settleGame(winnerRole,reason);window.setTimeout(()=>{if(state.phase==="FINISHED")restartGame();},2500);render();return;}setStatus(`本回合平手，雙方都維持現況。`,"");prepareAIRead();window.setTimeout(()=>{state.round++;state.playerPlayed=null;state.aiPlayed=null;state.selectedCardId=null;state.phase="READY";render();setStatus("新一回合開始，請重新選牌。","");},1200);state.busy=false;render();
-}
-function continueMultiRound(){
-  if(state.mode !== "multi" || state.phase !== "WAITING_OPPONENT" || state.busy) return;
-  const playerCard = state.playerPlayed;
-  if(!playerCard){return;}
-  const aiCard = chooseAICard();
-  state.aiPlayed = aiCard;
-  state.aiHand = state.aiHand.filter(c=>c.id!==aiCard.id);
-  state.phase = "REVEALED";
-  state.turnOwner = "PLAYER";
-  const result = resolveRound(playerCard.type, aiCard.type);
-  const story = generateNarrative(playerCard.type, aiCard.type, result, state.round);
-  $("narrativeText").textContent = story;
-  state.history.push({side:"雙人",round:state.round,text:`玩家 1 出 ${META[playerCard.type].name}，玩家 2 出 ${META[aiCard.type].name}，${result==="PLAYER_WIN"?"玩家 1 勝出。":result==="AI_WIN"?"玩家 2 勝出。":"平手。"}`});
-  if(result==="PLAYER_WIN"){state.playerScore++;}else if(result==="AI_WIN"){state.aiScore++;}
-  if(result==="PLAYER_WIN"||result==="AI_WIN"){const winnerRole=result==="PLAYER_WIN"?state.playerRole:state.aiRole;const reason=result==="PLAYER_WIN"?"玩家 1 把關鍵牌型和節奏掌握得更好。":"玩家 2 壓制了局勢，成功拿到本回合優勢。";state.busy=false;settleGame(winnerRole,reason);window.setTimeout(()=>{if(state.phase==="FINISHED")restartGame();},2500);render();return;}
-  setStatus("本回合平手，雙方都維持現況。"," ");
-  prepareAIRead();
-  window.setTimeout(()=>{
-    state.round++;
-    state.playerPlayed=null;state.aiPlayed=null;state.selectedCardId=null;state.phase="READY";state.turnOwner="PLAYER";render();setStatus("新一回合開始，請玩家 1 出牌。","");
-  },1200);
-  state.busy=false;render();
-}
-function nextRound(){if(state.phase!=="REVEALED"||state.busy)return;state.round++;state.playerPlayed=null;state.aiPlayed=null;state.selectedCardId=null;state.phase="READY";state.turnOwner="PLAYER";prepareAIRead();setStatus("新一回合開始，請重新選牌。","");render();}
-function restartGame(){state.round=1;state.playerScore=0;state.aiScore=0;state.selectedCardId=null;state.playerPlayed=null;state.aiPlayed=null;state.phase="READY";state.busy=false;state.aiSecretCardId=null;state.history=[];state.settlement=null;$("settlement").classList.remove("active");setupHands();prepareAIRead();$("narrativeText").textContent="房間裡的燈光映著十張牌。真正的勝負不在牌有多強，而在皇帝與奴隸的心理戰裡，誰能先看清對方的表情。";setStatus(state.mode==="multi"?"多人模式：玩家 1 先出牌。":"新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。");render();}
-$("playBtn").addEventListener("click",playRound);$("restartBtn").addEventListener("click",restartGame);$("emojiSendBtn").addEventListener("click",sendEmoji);$("emojiInput").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();sendEmoji();}});document.querySelectorAll(".emoji-btn").forEach(btn=>{btn.addEventListener("click",()=>{const emoji=btn.dataset.emoji;$("emojiInput").value=emoji;sendEmoji();});});
-function setMode(mode){
-  state.mode = mode;
-  $("singleModeBtn").classList.toggle("active", mode === "single");
-  $("multiModeBtn").classList.toggle("active", mode === "multi");
-  restartGame();
-}
-$("singleModeBtn").addEventListener("click",()=>setMode("single"));
-$("multiModeBtn").addEventListener("click",()=>setMode("multi"));
-window.addEventListener("keydown", (event) => {
-  if(state.mode === "multi" && state.phase === "WAITING_OPPONENT" && event.key === "Enter") {
-    continueMultiRound();
-  }
-});
-restartGame();
-</script>
+      <div class="hand-area">
+        <h2 class="section-title"><span id="handTitle">你的手牌</span><span class="small" id="selectedLabel">尚未選牌</span></h2>
+        <div class="hand" id="playerHand" aria-label="可選手牌"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="playBtn" disabled hidden>出牌對決</button>
+        <button class="btn btn-quiet" id="restartBtn">重新開始</button>
+      </div>
+
+      <div class="status" id="status" role="status" aria-live="polite">新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。</div>
+      <section class="narrative" aria-live="polite"><h3>NARRATIVE · 劇情紀錄</h3><p id="narrativeText">房間裡的燈光映著十張牌。真正的勝負不在牌有多強，而在皇帝與奴隸的心理戰裡，誰能先看清對方的表情。</p></section>
+    </section>
+
+    <section class="panel emoji-panel" aria-live="polite">
+      <h2 class="section-title"><span>表情發送系統</span><span class="small" id="emojiCount">0 則訊號</span></h2>
+      <div class="emoji-quick" aria-label="快速選擇表情">
+        <button type="button" class="emoji-btn" data-emoji="😎">😎</button>
+        <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+        <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+        <button type="button" class="emoji-btn" data-emoji="😏">😏</button>
+        <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+        <button type="button" class="emoji-btn" data-emoji="👑">👑</button>
+        <button type="button" class="emoji-btn" data-emoji="💬">💬</button>
+        <button type="button" class="emoji-btn" data-emoji="🎯">🎯</button>
+      </div>
+      <div class="emoji-composer">
+        <input id="emojiInput" type="text" maxlength="8" value="😎" placeholder="輸入表情或訊號" aria-label="發送表情或訊號" />
+        <button class="btn btn-primary" id="emojiSendBtn" type="button">發送表情</button>
+      </div>
+      <ul class="emoji-feed" id="emojiFeed" aria-label="表情訊號紀錄"></ul>
+    </section>
+
+    <section class="settlement" id="settlement" aria-live="polite">
+      <h2 id="settlementTitle">本局結算</h2>
+      <p class="verdict" id="settlementVerdict"></p>
+      <p id="settlementText"></p>
+      <p id="settlementRule"></p>
+    </section>
+
+    <div class="bottom-grid">
+      <section class="panel">
+        <h2 class="section-title">對戰紀錄 <span class="small" id="recordCount">0 筆</span></h2>
+        <div class="score-row">
+          <div class="score-box"><span>玩家獲勝累計</span><strong id="playerScore">0</strong></div>
+          <div class="score-box"><span>AI 獲勝累計</span><strong id="aiScore">0</strong></div>
+        </div>
+        <ul class="history" id="historyList"></ul>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">規則速覽</h2>
+        <ul class="rules">
+          <li><strong>皇帝</strong>擊敗市民。</li>
+          <li><strong>市民</strong>擊敗奴隸。</li>
+          <li><strong>奴隸</strong>擊敗皇帝。</li>
+          <li>單人模式與多人模式切換不影響基本規則。</li>
+          <li>表情發送系統可配合心理戰動作使用。</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="footer">E-CARD PRO · 單檔 HTML / CSS / JavaScript · 無需安裝套件</div>
+  </main>
+
+  <script>
+    "use strict";
+
+    const CARD = Object.freeze({ EMPEROR: "EMPEROR", CITIZEN: "CITIZEN", SLAVE: "SLAVE" });
+    const ROLE = Object.freeze({ EMPEROR: "EMPEROR", SLAVE: "SLAVE" });
+    const META = Object.freeze({
+      EMPEROR: { name: "皇帝", symbol: "♛", subtitle: "權力的象徵" },
+      CITIZEN: { name: "市民", symbol: "♟", subtitle: "平凡的一員" },
+      SLAVE: { name: "奴隸", symbol: "⚔", subtitle: "低聲絕地" }
+    });
+    const EMOJIS = ["😎","🤔","🔥","😏","👏","👑","💬","🎯","😶","😮","😬","👍","💥","⚡","✨","😌"];
+    const $ = id => document.getElementById(id);
+
+    const state = {
+      mode: "single",
+      round: 1,
+      playerRole: ROLE.EMPEROR,
+      opponentRole: ROLE.SLAVE,
+      playerHand: [],
+      opponentHand: [],
+      selectedCardId: null,
+      playerPlayed: null,
+      opponentPlayed: null,
+      history: [],
+      phase: "READY",
+      busy: false,
+      playerScore: 0,
+      opponentScore: 0,
+      turn: "player",
+      emojiHistory: [],
+      aiTell: null
+    };
+
+    function shuffle(array){
+      const a = [...array];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function createSpecialDeck(){
+      const emperor = { id: "emperor-01", type: CARD.EMPEROR };
+      const slave = { id: "slave-01", type: CARD.SLAVE };
+      const citizens = Array.from({ length: 8 }, (_, i) => ({ id: `citizen-${String(i + 1).padStart(2, "0")}`, type: CARD.CITIZEN }));
+      return { emperor, slave, citizens };
+    }
+
+    function setupHands(){
+      const { emperor, slave, citizens } = createSpecialDeck();
+      const shuffledCitizens = shuffle(citizens);
+
+      if(state.mode === "multi"){
+        state.playerRole = ROLE.EMPEROR;
+        state.opponentRole = ROLE.SLAVE;
+        state.playerHand = shuffle([emperor, ...shuffledCitizens.slice(0, 4)]);
+        state.opponentHand = shuffle([slave, ...shuffledCitizens.slice(4, 8)]);
+      } else {
+        state.playerRole = Math.random() < 0.5 ? ROLE.EMPEROR : ROLE.SLAVE;
+        state.opponentRole = state.playerRole === ROLE.EMPEROR ? ROLE.SLAVE : ROLE.EMPEROR;
+        const playerSpecial = state.playerRole === ROLE.EMPEROR ? emperor : slave;
+        const opponentSpecial = state.playerRole === ROLE.EMPEROR ? slave : emperor;
+        state.playerHand = shuffle([playerSpecial, ...shuffledCitizens.slice(0, 4)]);
+        state.opponentHand = shuffle([opponentSpecial, ...shuffledCitizens.slice(4, 8)]);
+      }
+
+      state.selectedCardId = null;
+      state.playerPlayed = null;
+      state.opponentPlayed = null;
+      state.phase = "READY";
+      state.turn = "player";
+      state.aiTell = { emoji: "🤔", text: "對手正在掩飾意圖……", note: "線索可能真實，也可能誤導。", hintedType: null };
+    }
+
+    const TELLS = {
+      EMPEROR: [
+        { emoji: "😎", text: "對手看起來胸有成竹。", note: "自信可能代表強牌，也可能是刻意演給你看。" },
+        { emoji: "👑", text: "對手似乎想展示王者氣勢。", note: "如果他知道自己掌握局勢，這樣的表情不一定是假裝。" },
+        { emoji: "🔥", text: "對手像是準備一場大逆轉。", note: "這種熱血感往往意味著他鎖定了某種強牌。" }
+      ],
+      CITIZEN: [
+        { emoji: "🤔", text: "對手似乎在權衡你將如何出牌。", note: "他不是完全確定，只是在試圖模擬你的選擇。" },
+        { emoji: "😶", text: "對手的表情很平靜，像是沒有輪到他發力。", note: "這種沉穩經常意味著他握著中等牌。" },
+        { emoji: "💬", text: "對手像是在等你先露出破綻。", note: "最危險的不是他有多少牌，而是他知道你會怎麼選。" }
+      ],
+      SLAVE: [
+        { emoji: "😏", text: "對手似乎藏著一個秘密計畫。", note: "奴隸格外會偏向低調與試探，你要警惕反擊。" },
+        { emoji: "😠", text: "對手的表情有些不安，像是在壓住激動。", note: "這通常代表他想要在最後一刻翻盤。" },
+        { emoji: "🎯", text: "對手像是在對著某個目標發狠。", note: "敵方可能已經計算好補刀路線。" }
+      ]
+    };
+
+    function resolveRound(playerType, opponentType){
+      if(playerType === opponentType) return "DRAW";
+      const beats = { [CARD.EMPEROR]: CARD.CITIZEN, [CARD.CITIZEN]: CARD.SLAVE, [CARD.SLAVE]: CARD.EMPEROR };
+      if(beats[playerType] === opponentType) return "PLAYER_WIN";
+      if(beats[opponentType] === playerType) return "AI_WIN";
+      return "DRAW";
+    }
+
+    function chooseAICard(){
+      if(!state.opponentHand.length) throw new Error("對手沒有可出的牌");
+      const aiSpecial = state.opponentHand.find(c => c.type === CARD.EMPEROR || c.type === CARD.SLAVE);
+      const aiCitizens = state.opponentHand.filter(c => c.type === CARD.CITIZEN);
+      if(aiSpecial){
+        const opponentSpecial = state.playerRole === ROLE.EMPEROR ? CARD.EMPEROR : CARD.SLAVE;
+        const seen = state.history.map(h => h.playerCard).includes(opponentSpecial);
+        if(seen && state.opponentRole === ROLE.EMPEROR && aiSpecial.type === CARD.EMPEROR) return aiSpecial;
+        if(seen && state.opponentRole === ROLE.SLAVE && aiSpecial.type === CARD.SLAVE) return aiSpecial;
+        if(aiCitizens.length && Math.random() < 0.75) return aiCitizens[Math.floor(Math.random()*aiCitizens.length)];
+        return aiSpecial;
+      }
+      return state.opponentHand[Math.floor(Math.random()*state.opponentHand.length)];
+    }
+
+    function prepareAIRead(){
+      if(!state.opponentHand.length){
+        state.aiTell = { emoji: "😶", text: "對手暫時沒有更多線索。", note: "本局的心理戰已經結束。", hintedType: null };
+        return;
+      }
+      const intended = chooseAICard();
+      const honest = Math.random() < 0.68;
+      const alternatives = Object.values(CARD).filter(t => t !== intended.type);
+      const hinted = honest ? intended.type : alternatives[Math.floor(Math.random() * alternatives.length)];
+      const tell = TELLS[hinted][Math.floor(Math.random() * TELLS[hinted].length)];
+      state.aiTell = { ...tell, hintedType: hinted, honest };
+    }
+
+    function generateNarrative(pc, oc, result, round){
+      const stories = {
+        "EMPEROR_CITIZEN": "皇帝的威壓籠罩全場，市民只能暫時退讓。",
+        "CITIZEN_EMPEROR": "市民抬頭迎向皇帝，但這一回合仍由權力壓過微弱的聲音。",
+        "CITIZEN_SLAVE": "市民抓住奴隸露出的破綻，反擊未能成功。",
+        "SLAVE_CITIZEN": "奴隸的利刃被市民看穿，最後的機會悄然溜走。",
+        "SLAVE_EMPEROR": "奴隸終於等到那一刻。看似不可撼動的皇帝，被最卑微的人推翻。",
+        "EMPEROR_SLAVE": "皇帝與奴隸正面相遇，這一次皇帝的威勢未能阻止反叛。",
+        "CITIZEN_CITIZEN": "兩張市民牌相遇，雙方都沒有取得優勢，僵局仍在延續。"
+      };
+      let s = stories[`${pc}_${oc}`] || "兩張牌在桌面上相遇，命運等待下一個決定。";
+      if(result === "PLAYER_WIN") s += " 這一回合，你掌握了主動權。";
+      else if(result === "AI_WIN") s += " 對手把優勢維持住了，接下來要更小心。";
+      else s += " 這一回合雙方都沒有讓步，局勢持續拉扯。";
+      return `第 ${round} 回合：${s}`;
+    }
+
+    function cardMarkup(card, back = false){
+      if(back){
+        return '<div class="playing-card reveal"><div class="card-sub">E-CARD</div><div class="card-symbol">?</div><div class="card-name">未知</div><div class="card-role">待揭示</div></div>';
+      }
+      const m = META[card.type];
+      return `<div class="playing-card reveal"><div class="card-sub">${m.name}</div><div class="card-symbol">${m.symbol}</div><div class="card-name">${m.name}</div><div class="card-role">${m.subtitle}</div></div>`;
+    }
+
+    function renderHand(){
+      const host = $("playerHand");
+      host.innerHTML = "";
+      const hand = state.turn === "player" ? state.playerHand : state.opponentHand;
+      hand.forEach(card => {
+        const m = META[card.type];
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `hand-card${state.selectedCardId === card.id ? " selected" : ""}`;
+        btn.innerHTML = `<div class="playing-card reveal"><div class="card-sub">${m.name}</div><div class="card-symbol">${m.symbol}</div><div class="card-name">${m.name}</div><div class="card-role">${m.subtitle}</div></div>`;
+        btn.addEventListener("click", () => selectCard(card.id));
+        host.appendChild(btn);
+      });
+
+      $("playerCount").textContent = `剩餘 ${state.playerHand.length} 張`;
+      $("aiCount").textContent = `剩餘 ${state.opponentHand.length} 張`;
+      if(state.selectedCardId){
+        const selected = state.playerHand.find(c => c.id === state.selectedCardId) || state.opponentHand.find(c => c.id === state.selectedCardId);
+        $("selectedLabel").textContent = selected ? `已選：${META[selected.type].name}` : "尚未選牌";
+      } else {
+        $("selectedLabel").textContent = "尚未選牌";
+      }
+    }
+
+    function renderHistory(){
+      const list = $("historyList");
+      list.innerHTML = "";
+      $("recordCount").textContent = `${state.history.length} 筆`;
+      $("playerScore").textContent = state.playerScore;
+      $("aiScore").textContent = state.opponentScore;
+      if(!state.history.length){
+        list.innerHTML = '<li><div class="meta"><span>系統</span><span>待開始</span></div><div class="desc">本局尚未產生對戰紀錄。</div></li>';
+        return;
+      }
+      state.history.slice().reverse().forEach(entry => {
+        const li = document.createElement("li");
+        li.innerHTML = `<div class="meta"><span>${entry.side}</span><span>${entry.round}</span></div><div class="desc">${entry.text}</div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderTell(){
+      const t = state.aiTell || { emoji: "🤔", text: "對手正在掩飾意圖……", note: "線索可能真實，也可能誤導。" };
+      $("tellEmoji").textContent = t.emoji;
+      $("tellText").textContent = t.text;
+      $("tellNote").textContent = t.note;
+    }
+
+    function render(){
+      const currentSideLabel = state.mode === "multi" ? "玩家 1 / 玩家 2" : "玩家 / 對手";
+      $("roundBadge").textContent = `第 ${Math.min(state.round, 5)} / 5 回合`;
+      $("phaseLabel").textContent = state.phase === "READY" ? "選擇一張手牌" : state.phase === "REVEALED" ? "本回合揭示中" : state.phase === "WAITING" ? "等待對手出牌" : "牌局結束";
+      $("playerRole").textContent = state.playerRole === ROLE.EMPEROR ? "皇帝方" : "奴隸方";
+      $("aiRole").textContent = state.opponentRole === ROLE.EMPEROR ? "皇帝方" : "奴隸方";
+      $("playerNameLabel").textContent = state.mode === "multi" ? "PLAYER 1" : "PLAYER";
+      $("aiNameLabel").textContent = state.mode === "multi" ? "PLAYER 2" : "AI OPPONENT";
+      $("playerRoleHint").textContent = state.mode === "multi" ? (state.turn === "player" ? "輪到你出牌" : "等待對手") : (state.playerRole === ROLE.EMPEROR ? "主動選牌" : "逆轉可能");
+      $("aiRoleHint").textContent = state.mode === "multi" ? (state.turn === "opponent" ? "輪到你出牌" : "等待對手") : (state.opponentRole === ROLE.EMPEROR ? "主動施壓" : "觀察訊號");
+      $("handTitle").textContent = state.mode === "multi" ? (state.turn === "player" ? "玩家 1 手牌" : "玩家 2 手牌") : "你的手牌";
+      $("playerSlot").innerHTML = state.playerPlayed ? cardMarkup(state.playerPlayed) : '<div class="muted-note">選擇下方手牌<br>準備出牌</div>';
+      $("aiSlot").innerHTML = state.opponentPlayed ? cardMarkup(state.opponentPlayed) : '<div class="muted-note">敵方牌面<br>待揭示</div>';
+      renderHand();
+      renderHistory();
+      renderTell();
+      renderEmojiFeed();
+    }
+
+    function setStatus(message, kind = ""){
+      const el = $("status");
+      el.className = `status${kind ? " " + kind : ""}`;
+      el.textContent = message;
+    }
+
+    function renderEmojiFeed(){
+      const feed = $("emojiFeed");
+      const count = $("emojiCount");
+      count.textContent = `${state.emojiHistory.length} 則訊號`;
+      feed.innerHTML = "";
+      if(!state.emojiHistory.length){
+        feed.innerHTML = '<li><div class="feed-meta"><span>系統</span></div><div class="feed-msg">尚未發送任何表情</div></li>';
+        return;
+      }
+      state.emojiHistory.slice(0,8).forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `<div class="feed-meta"><span>${item.source}</span><span>${item.time}</span></div><div class="feed-msg">${item.emoji}</div>`;
+        feed.appendChild(li);
+      });
+    }
+
+    function pushEmojiSignal(emoji, source = "PLAYER"){ 
+      const clean = (emoji || "💬").trim() || "💬";
+      const item = { emoji: clean, source, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+      state.emojiHistory.unshift(item);
+      state.emojiHistory = state.emojiHistory.slice(0, 8);
+      renderEmojiFeed();
+    }
+
+    function sendEmoji(){
+      const input = $("emojiInput");
+      const value = (input.value || "").trim();
+      const emojiValue = value || EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      input.value = emojiValue;
+      pushEmojiSignal(emojiValue, "你");
+      setStatus(`你發送了 ${emojiValue}，心理戰訊號已同步。`);
+      window.setTimeout(() => {
+        const aiReply = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+        pushEmojiSignal(aiReply, "AI");
+      }, 420);
+    }
+
+    function settleGame(winnerRole, reason){
+      state.phase = "FINISHED";
+      const won = winnerRole === state.playerRole;
+      const title = winnerRole === ROLE.EMPEROR ? "皇帝方獲勝結算" : "奴隸方獲勝結算";
+      $("settlementTitle").textContent = title;
+      $("settlementVerdict").textContent = won ? "恭喜你贏得本局。" : "本局由對手取得勝利。";
+      $("settlementText").textContent = won ? "你在心理戰中抓住了關鍵訊號，成功確立優勢。" : "對手在節奏與資訊掌握上更勝一籌。";
+      $("settlementRule").textContent = `結算依據：${reason}`;
+      $("settlement").classList.add("active");
+      setStatus(`${title}。${won ? "你贏得本局！" : "對手贏得本局。"} 本局結束，即將重新發牌（累積勝場紀錄保留）。`, won ? "win" : "lose");
+    }
+
+    function finishRoundAndResolve(playerCard, opponentCard){
+      state.phase = "REVEALED";
+      const result = resolveRound(playerCard.type, opponentCard.type);
+      const story = generateNarrative(playerCard.type, opponentCard.type, result, state.round);
+      $("narrativeText").textContent = story;
+      state.history.push({
+        side: state.mode === "multi" ? "雙人" : "你",
+        round: state.round,
+        text: state.mode === "multi"
+          ? `玩家 1 出 ${META[playerCard.type].name}，玩家 2 出 ${META[opponentCard.type].name}，${result === "PLAYER_WIN" ? "玩家 1 勝出。" : result === "AI_WIN" ? "玩家 2 勝出。" : "平手。"}`
+          : `你出 ${META[playerCard.type].name}，AI 出 ${META[opponentCard.type].name}，${result === "PLAYER_WIN" ? "你勝出。" : result === "AI_WIN" ? "AI 勝出。" : "平手。"}`
+      });
+
+      if(result === "PLAYER_WIN") state.playerScore++;
+      else if(result === "AI_WIN") state.opponentScore++;
+
+      if(result === "PLAYER_WIN" || result === "AI_WIN"){
+        const winnerRole = result === "PLAYER_WIN" ? state.playerRole : state.opponentRole;
+        const reason = result === "PLAYER_WIN" ? "你成功利用牌型優勢將勝負拉回手中。" : "對手透過更強的牌面與節奏壓制了你。";
+        settleGame(winnerRole, reason);
+        window.setTimeout(() => {
+          if(state.phase === "FINISHED") restartGame();
+        }, 2500);
+        render();
+        return;
+      }
+
+      setStatus("本回合平手，雙方都維持現況。", "");
+      prepareAIRead();
+      window.setTimeout(() => {
+        state.round++;
+        state.playerPlayed = null;
+        state.opponentPlayed = null;
+        state.selectedCardId = null;
+        state.phase = "READY";
+        state.turn = "player";
+        render();
+        setStatus(state.mode === "multi" ? "新一回合開始，請玩家 1 出牌。" : "新一回合開始，請重新選牌。", "");
+      }, 1200);
+      render();
+    }
+
+    function selectCard(id){
+      if(state.phase !== "READY" || state.busy) return;
+      const hand = state.turn === "player" ? state.playerHand : state.opponentHand;
+      const card = hand.find(c => c.id === id);
+      if(!card) return;
+      if(state.selectedCardId === id){
+        playTurn();
+        return;
+      }
+      state.selectedCardId = id;
+      setStatus(`已選擇 ${META[card.type].name}，點擊再次確認出牌。`);
+      render();
+    }
+
+    function playTurn(){
+      if(state.phase !== "READY" || state.busy || !state.selectedCardId) return;
+      const currentHand = state.turn === "player" ? state.playerHand : state.opponentHand;
+      const currentCard = currentHand.find(c => c.id === state.selectedCardId);
+      if(!currentCard) return;
+
+      state.busy = true;
+      if(state.turn === "player"){
+        state.playerPlayed = currentCard;
+        state.playerHand = state.playerHand.filter(c => c.id !== currentCard.id);
+      } else {
+        state.opponentPlayed = currentCard;
+        state.opponentHand = state.opponentHand.filter(c => c.id !== currentCard.id);
+      }
+
+      if(state.mode === "single"){
+        const opponentCard = chooseAICard();
+        state.opponentPlayed = opponentCard;
+        state.opponentHand = state.opponentHand.filter(c => c.id !== opponentCard.id);
+        state.phase = "REVEALED";
+        state.busy = false;
+        finishRoundAndResolve(state.playerPlayed, opponentCard);
+        return;
+      }
+
+      state.turn = state.turn === "player" ? "opponent" : "player";
+      state.phase = "WAITING";
+      state.selectedCardId = null;
+      state.busy = false;
+      render();
+
+      if(state.turn === "opponent"){
+        setStatus("玩家 2 出牌中…", "");
+        setTimeout(() => {
+          const opponentCard = chooseAICard();
+          state.opponentPlayed = opponentCard;
+          state.opponentHand = state.opponentHand.filter(c => c.id !== opponentCard.id);
+          finishRoundAndResolve(state.playerPlayed, opponentCard);
+        }, 500);
+      }
+    }
+
+    function setMode(mode){
+      state.mode = mode;
+      $("singleModeBtn").classList.toggle("active", mode === "single");
+      $("multiModeBtn").classList.toggle("active", mode === "multi");
+      restartGame();
+    }
+
+    function restartGame(){
+      state.round = 1;
+      state.playerScore = 0;
+      state.opponentScore = 0;
+      state.selectedCardId = null;
+      state.playerPlayed = null;
+      state.opponentPlayed = null;
+      state.phase = "READY";
+      state.busy = false;
+      state.turn = "player";
+      state.history = [];
+      $("settlement").classList.remove("active");
+      setupHands();
+      prepareAIRead();
+      $("narrativeText").textContent = "房間裡的燈光映著十張牌。真正的勝負不在牌有多強，而在皇帝與奴隸的心理戰裡，誰能先看清對方的表情。";
+      setStatus(state.mode === "multi" ? "多人模式：玩家 1 先出牌。" : "新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。", "");
+      render();
+    }
+
+    $("playBtn").addEventListener("click", playTurn);
+    $("restartBtn").addEventListener("click", restartGame);
+    $("emojiSendBtn").addEventListener("click", sendEmoji);
+    $("emojiInput").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); sendEmoji(); } });
+    document.querySelectorAll(".emoji-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $("emojiInput").value = btn.dataset.emoji;
+        sendEmoji();
+      });
+    });
+    $("singleModeBtn").addEventListener("click", () => setMode("single"));
+    $("multiModeBtn").addEventListener("click", () => setMode("multi"));
+
+    restartGame();
+  </script>
 </body>
 </html>
