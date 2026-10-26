@@ -65,12 +65,16 @@ function setupHands(){
   const emperor={id:"emperor-01",type:CARD.EMPEROR};
   const slave={id:"slave-01",type:CARD.SLAVE};
   const citizens=shuffle(Array.from({length:8},(_,i)=>({id:`citizen-${String(i+1).padStart(2,"0")}`,type:CARD.CITIZEN})));
-  const playerSpecial=state.playerRole===ROLE.EMPEROR?emperor:slave;
-  const aiSpecial=state.playerRole===ROLE.EMPEROR?slave:emperor;
-  const playerCitizens=shuffle(citizens.slice(0,4));
-  const aiCitizens=shuffle(citizens.slice(4));
-  state.playerHand=shuffle([playerSpecial,...playerCitizens]);
-  state.aiHand=shuffle([aiSpecial,...aiCitizens]);
+
+  const playerSpecial = state.playerRole === ROLE.EMPEROR ? emperor : slave;
+  const aiSpecial = state.playerRole === ROLE.EMPEROR ? slave : emperor;
+
+  const playerCitizens = citizens.slice(0, 4);
+  const aiCitizens = citizens.slice(4, 8);
+
+  state.playerHand = shuffle([playerSpecial, ...playerCitizens]);
+  state.aiHand = shuffle([aiSpecial, ...aiCitizens]);
+
   state.playerPlayed=null;
   state.aiPlayed=null;
   state.selectedCardId=null;
