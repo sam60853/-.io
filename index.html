@@ -56,12 +56,28 @@
 const CARD=Object.freeze({EMPEROR:"EMPEROR",CITIZEN:"CITIZEN",SLAVE:"SLAVE"});
 const META=Object.freeze({EMPEROR:{name:"皇帝",symbol:"♛",subtitle:"權力的象徵"},CITIZEN:{name:"市民",symbol:"♟",subtitle:"平凡的一員"},SLAVE:{name:"奴隸",symbol:"⚔",subtitle:"低聲絕地"}});
 const ROLE=Object.freeze({EMPEROR:"EMPEROR",SLAVE:"SLAVE"});
-const EMOJIS=["😎","🤔","🔥","😏","👏","👑","💬","🎯","😶","😮","���","👍","💥","⚡","✨","😌"];
+const EMOJIS=["😎","🤔","🔥","😏","👏","👑","💬","🎯","😶","😮","😬","👍","💥","⚡","✨","😌"];
 const $=id=>document.getElementById(id);
 const state={round:1,playerRole:ROLE.EMPEROR,aiRole:ROLE.SLAVE,playerHand:[],aiHand:[],selectedCardId:null,playerPlayed:null,aiPlayed:null,history:[],phase:"READY",busy:false,aiSecretCardId:null,aiTell:null,playerScore:0,aiScore:0,emojiHistory:[],settlement:null};
 function shuffle(array){const a=[...array];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function createDeck(){return [{id:"emperor-01",type:CARD.EMPEROR},{id:"slave-01",type:CARD.SLAVE},...Array.from({length:8},(_,i)=>({id:`citizen-${String(i+1).padStart(2,"0")}`,type:CARD.CITIZEN}))]}
-function setupHands(){const deck=shuffle(createDeck()),emperor=deck.find(c=>c.type===CARD.EMPEROR),slave=deck.find(c=>c.type===CARD.SLAVE),citizens=shuffle(deck.filter(c=>c.type===CARD.CITIZEN));const playerCards=[emperor,...citizens.slice(0,3),slave,...citizens.slice(3,6)];const aiCards=[slave,...citizens.slice(6),emperor,...citizens.slice(0,2)];state.playerHand=shuffle(playerCards);state.aiHand=shuffle(aiCards);state.playerPlayed=null;state.aiPlayed=null;state.selectedCardId=null;state.phase="READY";state.aiSecretCardId=null;state.aiTell={emoji:"🤔",text:"對手正在掩飾意圖……",note:"線索可能真實，也可能誤導。",hintedType:null};}
+function setupHands(){
+  const emperor={id:"emperor-01",type:CARD.EMPEROR};
+  const slave={id:"slave-01",type:CARD.SLAVE};
+  const citizens=shuffle(Array.from({length:8},(_,i)=>({id:`citizen-${String(i+1).padStart(2,"0")}`,type:CARD.CITIZEN})));
+  const playerSpecial=state.playerRole===ROLE.EMPEROR?emperor:slave;
+  const aiSpecial=state.playerRole===ROLE.EMPEROR?slave:emperor;
+  const playerCitizens=shuffle(citizens.slice(0,4));
+  const aiCitizens=shuffle(citizens.slice(4));
+  state.playerHand=shuffle([playerSpecial,...playerCitizens]);
+  state.aiHand=shuffle([aiSpecial,...aiCitizens]);
+  state.playerPlayed=null;
+  state.aiPlayed=null;
+  state.selectedCardId=null;
+  state.phase="READY";
+  state.aiSecretCardId=null;
+  state.aiTell={emoji:"🤔",text:"對手正在掩飾意圖……",note:"線索可能真實，也可能誤導。",hintedType:null};
+}
 const TELLS={EMPEROR:[{emoji:"😎",text:"對手看起來胸有成竹。",note:"自信可能代表強牌，也可能是刻意演給你看。"},{emoji:"👑",text:"對手似乎想展示王者氣勢。",note:"如果他知道自己掌握局勢，這樣的表情不一定是假裝。"},{emoji:"🔥",text:"對手像是準備一場大逆轉。",note:"這種熱血感往往意味著他鎖定了某種強牌。"}],CITIZEN:[{emoji:"🤔",text:"對手似乎在權衡你將如何出牌。",note:"他不是完全確定，只是在試圖模擬你的選擇。"},{emoji:"😶",text:"對手的表情很平靜，像是沒有輪到他發力。",note:"這種沉穩經常意味著他握著中等牌。"},{emoji:"💬",text:"對手像是在等你先露出破綻。",note:"最危險的不是他有多少牌，而是他知道你會怎麼選。"}],SLAVE:[{emoji:"😏",text:"對手似乎藏著一個秘密計畫。",note:"奴隸格外會偏向低調與試探，你要警惕反擊。"},{emoji:"😠",text:"對手的表情有些不安，像是在壓住激動。",note:"這通常代表他想要在最後一刻翻盤。"},{emoji:"🎯",text:"對手像是在對著某個目標發狠。",note:"敵方可能已經計算好補刀路線。"}]};
 function getPlayedTypes(side){return state.history.map(h=>h[side+"Card"]);} 
 function specialStillHeld(hand){return hand.some(c=>c.type===CARD.EMPEROR||c.type===CARD.SLAVE);} 
