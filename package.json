@@ -1,0 +1,13 @@
+{
+  "name": "e-card-pro",
+  "version": "1.0.0",
+  "description": "皇帝牌線上多人模式",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
