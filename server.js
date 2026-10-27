@@ -47,6 +47,7 @@ function resolveRound(playerType, opponentType){
 
 function getRoomState(room, socketId){
   const myIndex = room.players.findIndex(player => player.id === socketId);
+  const bothPlayed = room.players.every(player => player.played);
   const players = room.players.map((player, index) => ({
     id: player.id,
     name: player.name,
@@ -54,7 +55,7 @@ function getRoomState(room, socketId){
     score: player.score,
     hand: player.id === socketId ? player.hand : [],
     handCount: player.hand.length,
-    played: player.played,
+    played: bothPlayed || player.id === socketId ? player.played : null,
     isTurn: room.turnIndex === index,
     connected: true
   }));
