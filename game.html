@@ -455,6 +455,7 @@
 
       const myDeck = getMyDeck();
       const enemyDeck = getEnemyDeck();
+      const shouldRevealEnemyCard = Boolean(state.enemySelected && state.mySelected);
 
       myDeck.forEach((card) => {
         const el = document.createElement('div');
@@ -476,7 +477,7 @@
       enemyDeck.forEach((card) => {
         const el = document.createElement('div');
         el.className = 'card hidden';
-        if (state.enemySelected && card === state.enemySelected) {
+        if (shouldRevealEnemyCard && card === state.enemySelected) {
           el.classList.remove('hidden');
           el.textContent = card;
         } else {
