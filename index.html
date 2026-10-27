@@ -7,9 +7,9 @@
   <title>皇帝牌 E-CARD｜心理戰試煉 PRO</title>
   <style>
     :root{
-      --bg:#080d19;--panel:#111a2c;--panel2:#18243a;--line:#2b3b56;--gold:#f7c65c;--gold2:#c78d25;--text:#f4f7fc;--muted:#9eacc2;--green:#56e39a;--red:#ff7188;--blue:#91caff;--shadow:rgba(3,8,18,.58)
+      --bg:#080d19;--panel:#111a2c;--panel2:#18243a;--line:#2b3b56;--gold:#f7c65c;--gold2:#c78d25;--text:#f4f7fc;--muted:#9eacc2;--green:#56e39a;--red:#ff7188;--blue:#91caff;--shadow:rgba(3,8,18,.45);
     }
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#253758 0,transparent 55%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC",system-ui,-apple-system,sans-serif}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#253758 0,transparent 55%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans TC",sans-serif}
     .app{width:min(1160px,100% - 28px);margin:0 auto;padding:28px 0 34px}
     header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px;flex-wrap:wrap}
     .eyebrow{font-size:.72rem;letter-spacing:.22em;color:var(--gold);font-weight:800}.subtitle{margin:0;color:var(--muted);max-width:650px}
@@ -19,7 +19,7 @@
     .mode-bar{display:flex;gap:10px;flex-wrap:wrap}
     .mode-btn{border:1px solid var(--line);background:#101a2d;color:var(--text);padding:10px 16px;border-radius:12px;font-weight:800;cursor:pointer}
     .mode-btn.active{background:linear-gradient(135deg,#e4b85e,#d78b1d);color:#160f06;border-color:transparent}
-    .mode-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:14px;border:1px solid rgba(145,202,255,.35);background:rgba(145,202,255,.05);color:var(--muted);margin-bottom:18px}
+    .mode-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:14px;border:1px solid rgba(145,202,255,.35);background:rgba(145,202,255,.05)}
     .mode-hint strong{color:var(--gold);letter-spacing:.08em;text-transform:uppercase}
     .mode-actions{display:flex;justify-content:center;align-items:center;margin-bottom:18px}
     .start-single-btn{display:inline-flex}
@@ -46,24 +46,32 @@
     .player-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
     .player-name{font-size:.72rem;letter-spacing:.18em;color:var(--muted);font-weight:800}
     .hand-count{font-size:.75rem;color:var(--gold);font-weight:700}
-    .role{font-size:1.3rem;font-weight:800;margin-bottom:12px}.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(247,198,92,.12);border:1px solid rgba(247,198,92,.38);color:var(--gold);font-size:.75rem;font-weight:700}
-    .panel{padding:20px;margin-bottom:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:1rem;margin:0 0 15px}.section-title .small{font-weight:500;color:var(--muted)}
-    .ai-tell{display:flex;gap:13px;align-items:center;background:#0b1220;border:1px solid #263650;border-radius:14px;padding:13px 15px;margin-bottom:18px}.tell-emoji{font-size:2rem;min-width:42px;text-align:center}.tell-copy{flex:1}.tell-title{font-size:.74rem;letter-spacing:.18em;color:var(--muted);font-weight:800;text-transform:uppercase}.tell-text{font-size:1.05rem;font-weight:700;margin-top:4px}.tell-note{font-size:.82rem;color:var(--muted);margin-top:4px}
-    .arena{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}.card-slot{min-height:190px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#101b2d,#0d1626);border:1px solid var(--line);border-radius:18px;padding:16px}.vs{font-size:2rem;font-weight:900;color:var(--gold)}
+    .role{font-size:1.3rem;font-weight:800;margin-bottom:12px}.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(247,198,92,.12);border:1px solid rgba(247,198,92,.3);color:var(--gold)}
+    .panel{padding:20px;margin-bottom:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:1rem;margin:0 0 15px}.section-title .small{font-weight:600;color:var(--muted)}
+    .ai-tell{display:flex;gap:13px;align-items:center;background:#0b1220;border:1px solid #263650;border-radius:14px;padding:13px 15px;margin-bottom:18px}.tell-emoji{font-size:2rem;min-width:42px}
+    .tell-copy{flex:1}.tell-title{font-size:.78rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}.tell-text,.tell-note{line-height:1.6;color:var(--text)}.tell-note{color:var(--muted);font-size:.82rem}
+    .arena{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}.card-slot{min-height:190px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#101827,#0d1422);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .vs{font-weight:900;color:var(--gold);font-size:1.3rem}
     .muted-note{text-align:center;color:var(--muted);line-height:1.6}
-    .hand-area{margin-top:18px}.hand{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}.hand-card{background:none;border:none;padding:0;cursor:pointer;transition:transform .15s ease}.hand-card:hover{transform:translateY(-2px)}.hand-card.selected .playing-card{box-shadow:0 0 0 2px rgba(145,202,255,.7),0 18px 24px rgba(2,4,10,.26)}
-    .playing-card{width:108px;height:156px;border-radius:14px;padding:12px 10px;background:linear-gradient(145deg,#f9e7b0,#d3a748);box-shadow:0 18px 24px rgba(2,4,10,.26);color:#1a1309;display:flex;flex-direction:column;justify-content:space-between}.playing-card .card-sub{font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.7}.playing-card .card-symbol{font-size:2.1rem;text-align:center;line-height:1}.playing-card .card-name{font-size:.82rem;font-weight:800;text-align:center}.playing-card .card-role{font-size:.62rem;text-align:center;opacity:.8}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 10px}.status{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text);line-height:1.6}.status.win{border-color:rgba(86,227,154,.6);background:rgba(86,227,154,.08)}.status.lose{border-color:rgba(255,113,136,.5);background:rgba(255,113,136,.08)}
-    .narrative{margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}.narrative h3{margin:0 0 8px;font-size:.84rem;letter-spacing:.16em;color:var(--muted)}.narrative p{margin:0;color:var(--text);line-height:1.7}
-    .emoji-panel{margin-top:18px}.emoji-quick{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.emoji-btn{width:42px;height:42px;border-radius:12px;background:#101a2d;border:1px solid var(--line);font-size:1.3rem;cursor:pointer}.emoji-btn:hover{transform:translateY(-1px)}
-    .emoji-composer{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.emoji-composer input{flex:1;min-width:180px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0d1626;color:var(--text);font-size:1rem}
-    .emoji-feed{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}.emoji-feed li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line)}.feed-meta{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.feed-msg{font-size:1.4rem}
-    .settlement{display:none;margin:18px 0 0;padding:20px;border-radius:18px;background:linear-gradient(145deg,#172238,#101827);border:1px solid var(--line)}.settlement.active{display:block}.settlement h2{margin:0 0 8px}.verdict{font-size:1.2rem;font-weight:800;color:var(--gold)}
-    .bottom-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}.score-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}.score-box{padding:12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}.score-box span{font-size:.72rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}.score-box strong{font-size:1.6rem;color:var(--gold)}
-    .history{list-style:none;padding:0;margin:0;display:grid;gap:10px}.history li{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line)}.meta{display:flex;justify-content:space-between;gap:12px;font-size:.72rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}.desc{line-height:1.6;color:var(--text)}
+    .hand-area{margin-top:18px}.hand{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}.hand-card{background:none;border:none;padding:0;cursor:pointer;transition:transform .15s ease}.hand-card:hover{transform:translateY(-2px)}.hand-card.selected .playing-card{outline:2px solid rgba(86,227,154,.9);box-shadow:0 0 0 4px rgba(86,227,154,.12)}
+    .playing-card{width:108px;height:156px;border-radius:14px;padding:12px 10px;background:linear-gradient(145deg,#f9e7b0,#d3a748);box-shadow:0 18px 24px rgba(2,4,10,.26);color:#1a1309;display:flex;flex-direction:column;justify-content:space-between}
+    .playing-card.reveal{background:linear-gradient(145deg,#fff2bf,#e3b964)}
+    .card-sub,.card-role{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,19,9,.72);font-weight:800}
+    .card-symbol{font-size:2.4rem;line-height:1;text-align:center}
+    .card-name{font-size:1.05rem;font-weight:900;text-align:center}
+    .card-role{font-size:.6rem;text-align:center}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 10px}.status{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text);line-height:1.6}.status.win{border-color:rgba(86,227,154,.5);color:var(--green)}.status.lose{border-color:rgba(255,113,136,.5);color:var(--red)}
+    .narrative{margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}.narrative h3{margin:0 0 8px;font-size:.84rem;letter-spacing:.16em;color:var(--muted)}.narrative p{margin:0;line-height:1.7;color:var(--text)}
+    .emoji-panel{margin-top:18px}.emoji-quick{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.emoji-btn{width:42px;height:42px;border-radius:12px;background:#101a2d;border:1px solid var(--line);cursor:pointer;font-size:1.3rem}
+    .emoji-composer{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.emoji-composer input{flex:1;min-width:180px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0d1626;color:var(--text)}
+    .emoji-feed{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}.emoji-feed li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line)}
+    .feed-meta{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.feed-msg{font-size:1.4rem}
+    .settlement{display:none;margin:18px 0 0;padding:20px;border-radius:18px;background:linear-gradient(145deg,#172238,#101827);border:1px solid var(--line)}.settlement.active{display:block}.settlement h2{margin:0 0 8px}.verdict{font-size:1.1rem;font-weight:800;color:var(--gold)}
+    .bottom-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}.score-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}.score-box{padding:12px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line)}.score-box span{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.score-box strong{display:block;font-size:1.7rem;margin-top:6px}
+    .history{list-style:none;padding:0;margin:0;display:grid;gap:10px}.history li{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--line)}.meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}.desc{line-height:1.7;color:var(--text)}
     .rules{margin:0;padding-left:1.1rem;line-height:1.9;color:var(--text)}
     .footer{margin-top:26px;text-align:center;color:var(--muted);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
-    @media (max-width: 760px){.room-grid,.bottom-grid,.players,.arena{grid-template-columns:1fr}.card-slot{min-height:150px}.hand{justify-content:center}.app{padding-bottom:28px}.mode-hint{align-items:flex-start}}
+    @media (max-width: 760px){.room-grid,.bottom-grid,.players,.arena{grid-template-columns:1fr}.card-slot{min-height:150px}.hand{justify-content:center}.app{padding-bottom:28px}.mode-hint{align-items:flex-start;flex-direction:column}} 
   </style>
 </head>
 <body>
@@ -638,7 +646,7 @@
 
     function render(){
       $("roundBadge").textContent = `第 ${Math.min(state.round, 5)} / 5 回合`;
-      $("phaseLabel").textContent = state.phase === "READY" ? (state.playerHand.length ? "選擇一張手牌" : state.mode === "single" ? "等待開始" : "等待玩家出牌") : state.phase === "REVEALED" ? "本回合揭示中" : state.phase === "WAITING" ? "等待對手出牌" : state.phase === "FINISHED" ? "對戰結束" : "選擇一張手牌";
+      $("phaseLabel").textContent = state.phase === "READY" ? (state.playerHand.length ? "選擇一張手牌" : state.mode === "single" ? "等待開始" : "等待玩家出牌") : state.phase === "REVEALED" ? "牌面已揭示" : state.phase === "FINISHED" ? "局已結束" : "進行中";
       $("playerRole").textContent = state.playerRole === ROLE.EMPEROR ? "皇帝方" : "奴隸方";
       $("aiRole").textContent = state.opponentRole === ROLE.EMPEROR ? "皇帝方" : "奴隸方";
       $("playerNameLabel").textContent = state.mode === "multi" ? (state.myPlayerIndex === 0 ? "PLAYER 1" : "PLAYER 2") : "PLAYER";
@@ -646,8 +654,10 @@
       $("playerRoleHint").textContent = state.mode === "multi" ? (state.turn === "player" ? "輪到你出牌" : "等待對手") : (state.playerRole === ROLE.EMPEROR ? "主動選牌" : "逆轉可行");
       $("aiRoleHint").textContent = state.mode === "multi" ? (state.turn === "opponent" ? "輪到你出牌" : "等待對手") : (state.opponentRole === ROLE.EMPEROR ? "主動施壓" : "觀察訊號");
       $("handTitle").textContent = state.mode === "multi" ? (state.myPlayerIndex === 0 ? "玩家 1 手牌" : "玩家 2 手牌") : "你的手牌";
+
+      const revealOpponent = Boolean(state.playerPlayed && state.opponentPlayed);
       $("playerSlot").innerHTML = state.playerPlayed ? cardMarkup(state.playerPlayed) : '<div class="muted-note">選擇下方手牌<br>準備出牌</div>';
-      $("aiSlot").innerHTML = state.opponentPlayed ? cardMarkup(state.opponentPlayed) : '<div class="muted-note">敵方牌面<br>待揭示</div>';
+      $("aiSlot").innerHTML = revealOpponent ? cardMarkup(state.opponentPlayed) : '<div class="muted-note">敵方牌面<br>待揭示</div>';
       renderHand();
       renderHistory();
       renderTell();
@@ -676,8 +686,12 @@
       state.opponentRole = opp.role === "EMPEROR" ? ROLE.EMPEROR : ROLE.SLAVE;
       state.playerHand = me.hand || [];
       state.opponentHand = opp.hand || [];
-      state.playerPlayed = me.played || null;
-      state.opponentPlayed = opp.played || null;
+
+      const myPlayed = me.played || null;
+      const oppPlayed = opp.played || null;
+      state.playerPlayed = myPlayed;
+      state.opponentPlayed = room.players.every(player => player.played) ? oppPlayed : null;
+
       state.playerScore = me.score || 0;
       state.opponentScore = opp.score || 0;
       state.turn = room.turnIndex === myIndex ? "player" : "opponent";
