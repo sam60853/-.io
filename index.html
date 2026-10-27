@@ -81,8 +81,8 @@
 
     <section class="room-lobby hidden" id="roomLobby">
       <div class="room-top">
-        <h2>多人模式</h2>
-        <div class="room-status" id="roomStatus">本機雙人</div>
+        <h2>線上多人房間</h2>
+        <div class="room-status" id="roomStatus">未連線</div>
       </div>
       <div class="room-grid">
         <div class="field">
@@ -91,7 +91,7 @@
         </div>
         <div class="field">
           <label for="roomInput">房間代碼</label>
-          <input id="roomInput" type="text" maxlength="8" placeholder="本地雙人模式不需房間代碼" />
+          <input id="roomInput" type="text" maxlength="8" placeholder="輸入房間代碼或建立新房" />
         </div>
       </div>
       <div class="room-actions">
@@ -101,7 +101,7 @@
       </div>
       <div class="room-code">
         <span>當前房間</span>
-        <strong id="roomCodeText">本地雙人</strong>
+        <strong id="roomCodeText">未建立</strong>
         <button class="btn btn-quiet" id="copyRoomBtn" type="button">複製代碼</button>
       </div>
     </section>
@@ -197,7 +197,7 @@
           <li><strong>皇帝</strong>擊敗市民。</li>
           <li><strong>市民</strong>擊敗奴隸。</li>
           <li><strong>奴隸</strong>擊敗皇帝。</li>
-          <li>單人模式對戰 AI，多人模式為同機雙人對戰。</li>
+          <li>單人模式對戰 AI，多人模式為不同機線上對戰。</li>
           <li>表情發送系統可配合心理戰動作使用。</li>
         </ul>
       </section>
@@ -206,6 +206,7 @@
     <div class="footer">E-CARD PRO · 單檔 HTML / CSS / JavaScript · 無需安裝套件</div>
   </main>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     "use strict";
 
@@ -218,6 +219,7 @@
     });
     const EMOJIS = ["😎","🤔","🔥","😏","👏","👑","💬","🎯","😶","😮","😬","👍","💥","⚡","✨","😌"];
     const $ = id => document.getElementById(id);
+    const socket = io();
 
     const state = {
       mode: "single",
@@ -367,7 +369,7 @@
     function renderHand(){
       const host = $("playerHand");
       host.innerHTML = "";
-      const hand = state.mode === "multi" ? (state.turn === "player" ? state.playerHand : state.opponentHand) : (state.turn === "player" ? state.playerHand : state.opponentHand);
+      const hand = state.online ? state.playerHand : (state.turn === "player" ? state.playerHand : state.opponentHand);
       hand.forEach(card => {
         const m = META[card.type];
         const btn = document.createElement("button");
@@ -504,6 +506,17 @@
     }
 
     function selectCard(id){
+      if(state.online){
+        if(state.phase !== "READY" || state.busy) return;
+        const card = state.playerHand.find(c => c.id === id);
+        if(!card) return;
+        state.selectedCardId = id;
+        setStatus(`已選擇 ${META[card.type].name}，等待對手確認…`);
+        render();
+        socket.emit("game:playCard", { roomId: state.roomId, cardId: id });
+        return;
+      }
+
       if(state.phase !== "READY" || state.busy) return;
       const hand = state.turn === "player" ? state.playerHand : state.opponentHand;
       const card = hand.find(c => c.id === id);
@@ -518,13 +531,18 @@
     }
 
     function playTurn(){
+      if(state.online){
+        if(!state.selectedCardId) return;
+        socket.emit("game:playCard", { roomId: state.roomId, cardId: state.selectedCardId });
+        return;
+      }
+
       if(state.phase !== "READY" || state.busy || !state.selectedCardId) return;
       const currentHand = state.turn === "player" ? state.playerHand : state.opponentHand;
       const currentCard = currentHand.find(c => c.id === state.selectedCardId);
       if(!currentCard) return;
 
       state.busy = true;
-
       if(state.turn === "player"){
         state.playerPlayed = currentCard;
         state.playerHand = state.playerHand.filter(c => c.id !== currentCard.id);
@@ -543,35 +561,49 @@
         return;
       }
 
+      state.turn = state.turn === "player" ? "opponent" : "player";
       state.phase = "WAITING";
       state.selectedCardId = null;
       state.busy = false;
-
-      if(state.turn === "player"){
-        state.turn = "opponent";
-        setStatus("玩家 2 請出牌。", "");
-      } else {
-        state.phase = "REVEALED";
-        finishRoundAndResolve(state.playerPlayed, state.opponentPlayed);
-        return;
-      }
-
       render();
+
+      if(state.turn === "opponent"){
+        setStatus("玩家 2 出牌中…", "");
+        setTimeout(() => {
+          const opponentCard = chooseAICard();
+          state.opponentPlayed = opponentCard;
+          state.opponentHand = state.opponentHand.filter(c => c.id !== opponentCard.id);
+          finishRoundAndResolve(state.playerPlayed, opponentCard);
+        }, 500);
+      }
     }
 
     function setMode(mode){
       state.mode = mode;
-      state.online = false;
       $("singleModeBtn").classList.toggle("active", mode === "single");
       $("multiModeBtn").classList.toggle("active", mode === "multi");
-      $("roomLobby").classList.add("hidden");
-      restartGame();
-
       if(mode === "single"){
-        setStatus("新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。", "");
-      } else {
-        setStatus("多人模式：雙人本地對戰，玩家 1 與玩家 2 交替出牌。", "");
+        state.online = false;
+        $("roomLobby").classList.add("hidden");
+        if(state.roomId) {
+          socket.emit("room:leave", { roomId: state.roomId });
+        }
+        state.room = null;
+        state.roomId = "";
+        $("roomCodeText").textContent = "未建立";
+        $("roomInput").value = "";
+        restartGame();
+        return;
       }
+
+      state.online = true;
+      $("roomLobby").classList.remove("hidden");
+      setStatus("多人模式已切換，請建立房間或輸入房間代碼加入。", "");
+      state.room = null;
+      state.roomId = "";
+      $("roomCodeText").textContent = "未建立";
+      $("roomInput").value = "";
+      render();
     }
 
     function restartGame(){
@@ -589,11 +621,11 @@
       setupHands();
       prepareAIRead();
       $("narrativeText").textContent = "房間裡的燈光映著十張牌。真正的勝負不在牌有多強，而在皇帝與奴隸的心理戰裡，誰能先看清對方的表情。";
+      setStatus(state.mode === "multi" ? "多人模式：建立房間後由另一位玩家連線加入。" : "新牌局已開始。手牌點擊第 1 下選取，第 2 下再次點擊同一張牌即可出牌。", "");
       render();
     }
 
     function render(){
-      const currentSideLabel = state.mode === "multi" ? "玩家 1 / 玩家 2" : "玩家 / 對手";
       $("roundBadge").textContent = `第 ${Math.min(state.round, 5)} / 5 回合`;
       $("phaseLabel").textContent = state.phase === "READY" ? "選擇一張手牌" : state.phase === "REVEALED" ? "本回合揭示中" : state.phase === "WAITING" ? "等待對手出牌" : "牌局結束";
       $("playerRole").textContent = state.playerRole === ROLE.EMPEROR ? "皇帝方" : "奴隸方";
@@ -617,13 +649,6 @@
       el.textContent = message;
     }
 
-    function randomId(length = 6){
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      let out = "";
-      for(let i = 0; i < length; i++) out += chars[Math.floor(Math.random() * chars.length)];
-      return out;
-    }
-
     function updateRoomCard(){
       const roomId = state.roomId || "未建立";
       $("roomCodeText").textContent = roomId;
@@ -633,18 +658,66 @@
     function applyRoomState(room){
       if(!room) return;
       state.room = room;
-      state.roomId = room.id || "本地雙人";
-      state.online = false;
+      state.roomId = room.id;
+      state.online = true;
       state.phase = room.phase === "playing" ? "READY" : "READY";
+      const selfIndex = room.myPlayerIndex;
+      const self = room.players[selfIndex] || room.players[0] || { name: state.myName, role: ROLE.EMPEROR, hand: [], score: 0 };
+      const opp = room.players.find((p, idx) => idx !== selfIndex) || { name: "等待對手", role: ROLE.SLAVE, handCount: 0, score: 0, played: null };
+      state.playerRole = self.role === "EMPEROR" ? ROLE.EMPEROR : ROLE.SLAVE;
+      state.opponentRole = opp.role === "EMPEROR" ? ROLE.EMPEROR : ROLE.SLAVE;
+      state.playerHand = self.hand || [];
+      state.opponentHand = Array.from({ length: opp.handCount || 0 }, (_, i) => ({ id: `opp-${i + 1}`, type: CARD.CITIZEN }));
+      state.playerScore = self.score || 0;
+      state.opponentScore = opp.score || 0;
+      state.turn = room.players[room.turnIndex]?.id === socket.id ? "player" : "opponent";
+      state.round = room.round || 1;
+      $("playerNameLabel").textContent = self.name || state.myName;
+      $("aiNameLabel").textContent = opp.name || "等待對手";
+      $("playerRole").textContent = self.role === "EMPEROR" ? "皇帝方" : "奴隸方";
+      $("aiRole").textContent = opp.role === "EMPEROR" ? "皇帝方" : "奴隸方";
+      $("playerCount").textContent = `剩餘 ${self.hand.length} 張`;
+      $("aiCount").textContent = `剩餘 ${opp.handCount || 0} 張`;
+      updateRoomCard();
+
+      if(room.phase === "lobby"){
+        setStatus("房間建立成功，等待另一位玩家加入。", "");
+      } else if(room.phase === "playing"){
+        setStatus(room.players[room.turnIndex]?.id === socket.id ? "輪到你出牌了。" : "等待對手出牌…", "");
+      } else if(room.phase === "finished"){
+        setStatus("房間已結束，請重新建立或加入新房。", "");
+      }
+
       render();
     }
+
+    socket.on("connect", () => {
+      $("roomStatus").textContent = "已連線";
+    });
+
+    socket.on("room:state", (room) => {
+      applyRoomState(room);
+    });
+
+    socket.on("room:error", (message) => {
+      setStatus(message, "lose");
+    });
+
+    socket.on("room:joined", (payload) => {
+      const { roomId } = payload || {};
+      state.roomId = roomId;
+      $("roomStatus").textContent = "房間已連線";
+      updateRoomCard();
+    });
+
+    socket.on("room:player-joined", (payload) => {
+      setStatus(`${payload.name} 已加入房間，遊戲即將開始。`, "");
+    });
 
     function createRoom(){
       const name = $("playerNameInput").value.trim() || "玩家 1";
       state.myName = name;
-      state.roomId = "本地雙人";
-      $("roomCodeText").textContent = state.roomId;
-      setStatus("多人模式採用本地雙人對戰，不需要實際連線房間。", "");
+      socket.emit("room:create", { name });
     }
 
     function joinRoom(){
@@ -652,27 +725,30 @@
       const roomId = $("roomInput").value.trim().toUpperCase();
       state.myName = name;
       if(!roomId){
-        setStatus("本地雙人模式不需要房間代碼，直接按「重新開始」即可對戰。", "");
+        setStatus("請先輸入房間代碼。", "lose");
         return;
       }
       state.roomId = roomId;
       $("roomCodeText").textContent = roomId;
-      setStatus(`已設定房間代碼 ${roomId}，但本版本採用同機雙人模式。`, "");
+      socket.emit("room:join", { roomId, name });
     }
 
     function leaveRoom(){
+      if(!state.roomId) return;
+      socket.emit("room:leave", { roomId: state.roomId });
       state.roomId = "";
       state.room = null;
       state.online = false;
-      $("roomCodeText").textContent = "本地雙人";
+      $("roomCodeText").textContent = "未建立";
       $("roomInput").value = "";
       $("roomLobby").classList.add("hidden");
+      $("roomStatus").textContent = "未連線";
       setMode("single");
     }
 
     function copyRoomCode(){
       const code = $("roomCodeText").textContent.trim();
-      if(code === "未建立" || code === "本地雙人") return;
+      if(code === "未建立") return;
       navigator.clipboard.writeText(code).then(() => {
         setStatus(`房間代碼 ${code} 已複製到剪貼簿。`, "");
       }).catch(() => {
@@ -682,6 +758,16 @@
 
     $("playBtn").addEventListener("click", playTurn);
     $("restartBtn").addEventListener("click", () => {
+      if(state.online) {
+        socket.emit("room:leave", { roomId: state.roomId });
+        state.roomId = "";
+        state.room = null;
+        state.online = false;
+        $("roomCodeText").textContent = "未建立";
+        $("roomLobby").classList.add("hidden");
+        setMode("single");
+        return;
+      }
       restartGame();
     });
     $("emojiSendBtn").addEventListener("click", sendEmoji);
