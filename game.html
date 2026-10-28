@@ -354,12 +354,19 @@
       CITIZEN: 'EMPEROR'
     };
 
+    const roleLabelMap = {
+      EMPEROR: '皇帝方',
+      SLAVE: '奴隸方',
+      CITIZEN: '市民方'
+    };
+
     const state = {
       mode: 'solo',
       socket: null,
       roomId: '',
       roomState: null,
       myPlayerIndex: null,
+      selectedMultiCardId: null,
       solo: {
         playerRole: 'emperor',
         myDeck: [],
@@ -406,15 +413,6 @@
       return String(value || '').replace(/[^A-Z0-9]/gi, '').slice(0, 5).toUpperCase();
     }
 
-    function generateRoomCode() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let code = '';
-      for (let i = 0; i < 5; i++) {
-        code += chars[Math.floor(Math.random() * chars.length)];
-      }
-      return code;
-    }
-
     function updateScore() {
       scoreEl.textContent = `分數：皇帝 ${state.solo.score.emperor} - ${state.solo.score.slave} 奴隸`;
     }
@@ -455,10 +453,19 @@
         return;
       }
 
-      const myName = state.roomState && state.myPlayerIndex !== null ? state.roomState.players[state.myPlayerIndex]?.name || '我' : '我';
-      const oppName = state.roomState ? state.roomState.players.find((player, idx) => idx !== state.myPlayerIndex)?.name || '對手' : '對手';
-      labelPlayer.textContent = myName;
-      labelEnemy.textContent = oppName;
+      if (!state.roomState || state.myPlayerIndex === null) {
+        labelPlayer.textContent = '我方';
+        labelEnemy.textContent = '對手';
+        return;
+      }
+
+      const myPlayer = state.roomState.players[state.myPlayerIndex];
+      const opponent = state.roomState.players.find((player, index) => index !== state.myPlayerIndex) || null;
+
+      const myRole = myPlayer?.role || '';
+      const oppRole = opponent?.role || '';
+      labelPlayer.textContent = myRole ? `${myPlayer.name}（${roleLabelMap[myRole] || myRole}）` : myPlayer?.name || '我方';
+      labelEnemy.textContent = oppRole ? `${opponent.name}（${roleLabelMap[oppRole] || oppRole}）` : opponent?.name || '對手';
     }
 
     function renderSoloHands() {
@@ -737,6 +744,7 @@
         state.roomId = roomId;
         state.roomState = roomState;
         state.myPlayerIndex = roomState?.myPlayerIndex ?? null;
+        state.selectedMultiCardId = null;
         setConnStatus(`已加入房間 ${roomId}`);
         setStatus(isOwner ? '房間建立成功，等待對手加入' : '已加入房間，等待房主開始');
         resultEl.textContent = isOwner ? '等待對手加入' : '等待房主開始';
@@ -748,6 +756,7 @@
         state.roomState = roomState;
         state.myPlayerIndex = roomState?.myPlayerIndex ?? null;
         state.roomId = roomState?.id || state.roomId;
+        state.selectedMultiCardId = null;
         setStatus(roomState?.status || '等待狀態');
         resultEl.textContent = roomState?.winner ? `勝者：${roomState.winner}` : (roomState?.phase === 'playing' ? `輪到 ${roomState.players[roomState.turnIndex]?.name || '對手'} 出牌` : '等待對戰開始');
         render();
@@ -800,6 +809,7 @@
       state.roomState = null;
       state.roomId = '';
       state.myPlayerIndex = null;
+      state.selectedMultiCardId = null;
       roomInput.value = '';
       setRoomMeta('房間：尚未建立');
       setConnStatus('尚未連線');
@@ -819,19 +829,6 @@
       state.selectedMultiCardId = card.id;
       state.socket.emit('game:playCard', { roomId: state.roomId, cardId: card.id });
       setStatus('已出牌，等待對手');
-      render();
-    }
-
-    function updateRoomAfterState() {
-      if (!state.roomState) return;
-      const myPlayer = state.roomState.players[state.myPlayerIndex];
-      const opponent = state.roomState.players.find((player, index) => index !== state.myPlayerIndex) || null;
-      if (myPlayer) {
-        labelPlayer.textContent = myPlayer.name;
-      }
-      if (opponent) {
-        labelEnemy.textContent = opponent.name;
-      }
       render();
     }
 
