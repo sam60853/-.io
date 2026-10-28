@@ -16,20 +16,27 @@ const CARD = { EMPEROR: "EMPEROR", CITIZEN: "CITIZEN", SLAVE: "SLAVE" };
 
 function shuffle(array) {
   const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
+  for (let i = copy.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
 }
 
-function randomRoomId() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 5; i += 1) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
+function normalizeName(name, fallback = "玩家") {
+  return String(name || fallback).trim() || fallback;
+}
+
+function makePlayer(id, name, fallback = "玩家") {
+  return {
+    id,
+    name: normalizeName(name, fallback),
+    role: "",
+    score: 0,
+    hand: [],
+    played: null,
+    connected: true
+  };
 }
 
 function createCitizenDeck() {
@@ -41,10 +48,19 @@ function createCitizenDeck() {
 
 function createHand(role) {
   const citizens = shuffle(createCitizenDeck());
-  const special = role === "EMPEROR"
+  const special = role === CARD.EMPEROR
     ? { id: "emperor-01", type: CARD.EMPEROR }
     : { id: "slave-01", type: CARD.SLAVE };
   return shuffle([special, ...citizens.slice(0, 4)]);
+}
+
+function randomRoomId() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 5; i += 1) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
 }
 
 function resolveRound(playerType, opponentType) {
@@ -57,18 +73,6 @@ function resolveRound(playerType, opponentType) {
   if (beats[playerType] === opponentType) return "PLAYER_1";
   if (beats[opponentType] === playerType) return "PLAYER_2";
   return "DRAW";
-}
-
-function makePlayer(id, name) {
-  return {
-    id,
-    name: (name || "玩家").trim() || "玩家",
-    role: "",
-    score: 0,
-    hand: [],
-    played: null,
-    connected: true
-  };
 }
 
 function getRoomState(room, socketId) {
@@ -100,7 +104,6 @@ function getRoomState(room, socketId) {
     winner: room.winner || null,
     status: room.status,
     ownerId: room.ownerId,
-    canStart: room.phase === "lobby" && room.players.length === 2 && room.ownerId === socketId,
     isOwner: room.ownerId === socketId
   };
 }
@@ -112,7 +115,7 @@ function broadcastRoom(room) {
 }
 
 function initializeRoomGame(room) {
-  const roles = shuffle(["EMPEROR", "SLAVE"]);
+  const roles = shuffle([CARD.EMPEROR, CARD.SLAVE]);
   room.phase = "playing";
   room.round = 1;
   room.roundLimit = 5;
@@ -122,9 +125,26 @@ function initializeRoomGame(room) {
   room.status = "遊戲開始";
 
   room.players.forEach((player, index) => {
-    player.role = roles[index] || "EMPEROR";
+    player.role = roles[index] || CARD.EMPEROR;
     player.hand = createHand(player.role);
     player.score = 0;
+    player.played = null;
+  });
+}
+
+function resetRoomForLobby(room) {
+  room.phase = "lobby";
+  room.round = 1;
+  room.roundLimit = 5;
+  room.turnIndex = 0;
+  room.history = [];
+  room.winner = null;
+  room.status = "等待玩家加入";
+
+  room.players.forEach((player) => {
+    player.role = "";
+    player.score = 0;
+    player.hand = [];
     player.played = null;
   });
 }
@@ -133,7 +153,6 @@ function endRound(room) {
   const [p1, p2] = room.players;
   const cardA = p1.played;
   const cardB = p2.played;
-
   if (!cardA || !cardB) return;
 
   const result = resolveRound(cardA.type, cardB.type);
@@ -171,47 +190,7 @@ function endRound(room) {
   broadcastRoom(room);
 }
 
-function resetRoomForLobby(room) {
-  room.phase = "lobby";
-  room.round = 1;
-  room.roundLimit = 5;
-  room.turnIndex = 0;
-  room.winner = null;
-  room.history = [];
-  room.status = "等待玩家加入";
-
-  room.players.forEach((player) => {
-    player.role = "";
-    player.score = 0;
-    player.hand = [];
-    player.played = null;
-  });
-}
-
-function removePlayerFromRoom(roomId, socketId) {
-  const room = rooms.get(roomId);
-  if (!room) return;
-
-  const leavingIndex = room.players.findIndex((player) => player.id === socketId);
-  if (leavingIndex >= 0) {
-    room.players.splice(leavingIndex, 1);
-  }
-
-  if (room.players.length === 0) {
-    rooms.delete(roomId);
-    return;
-  }
-
-  if (room.ownerId === socketId) {
-    room.ownerId = room.players[0].id;
-  }
-
-  resetRoomForLobby(room);
-  broadcastRoom(room);
-}
-
 app.use(express.static(__dirname));
-
 app.get("/health", (_req, res) => {
   res.json({ ok: true, rooms: rooms.size });
 });
@@ -226,7 +205,7 @@ io.on("connection", (socket) => {
     const room = {
       id: roomId,
       ownerId: socket.id,
-      players: [makePlayer(socket.id, name)],
+      players: [makePlayer(socket.id, name, "玩家 1")],
       phase: "lobby",
       round: 1,
       roundLimit: 5,
@@ -239,7 +218,13 @@ io.on("connection", (socket) => {
     rooms.set(roomId, room);
     socket.join(roomId);
     socket.data.roomId = roomId;
-    socket.emit("room:joined", { roomId, isOwner: true, state: getRoomState(room, socket.id) });
+
+    socket.emit("room:joined", {
+      roomId,
+      isOwner: true,
+      state: getRoomState(room, socket.id)
+    });
+
     broadcastRoom(room);
   });
 
@@ -247,25 +232,32 @@ io.on("connection", (socket) => {
     const normalizedId = (roomId || "").trim().toUpperCase();
     const room = rooms.get(normalizedId);
     if (!room) {
-      socket.emit("room:error", "找不到這個房間，請確認房間碼是否正確。 ");
+      socket.emit("room:error", "找不到這個房間，請確認房間碼是否正確。");
       return;
     }
 
     if (room.players.length >= 2) {
-      socket.emit("room:error", "這個房間已滿，請選擇其他房間。 ");
+      socket.emit("room:error", "這個房間已滿，請選擇其他房間。");
       return;
     }
 
     if (room.phase !== "lobby") {
-      socket.emit("room:error", "這個房間已經開始遊戲，請稍後再試。 ");
+      socket.emit("room:error", "這個房間已經開始遊戲，請稍後再試。");
       return;
     }
 
-    room.players.push(makePlayer(socket.id, name));
+    const joinPlayer = makePlayer(socket.id, name, "玩家 2");
+    room.players.push(joinPlayer);
     socket.join(normalizedId);
     socket.data.roomId = normalizedId;
-    io.to(normalizedId).emit("room:player-joined", { name: makePlayer(socket.id, name).name });
-    socket.emit("room:joined", { roomId: normalizedId, isOwner: false, state: getRoomState(room, socket.id) });
+
+    socket.emit("room:joined", {
+      roomId: normalizedId,
+      isOwner: false,
+      state: getRoomState(room, socket.id)
+    });
+
+    io.to(normalizedId).emit("room:player-joined", { name: joinPlayer.name });
     broadcastRoom(room);
   });
 
@@ -273,10 +265,12 @@ io.on("connection", (socket) => {
     const targetRoomId = (roomId || socket.data.roomId || "").trim().toUpperCase();
     const room = rooms.get(targetRoomId);
     if (!room) return;
+
     if (room.ownerId !== socket.id) {
       socket.emit("room:error", "只有房主才能開始遊戲。");
       return;
     }
+
     if (room.players.length < 2) {
       socket.emit("room:error", "至少需要兩位玩家才能開始遊戲。");
       return;
@@ -291,9 +285,23 @@ io.on("connection", (socket) => {
     const room = rooms.get(targetRoomId);
     if (!room) return;
 
-    removePlayerFromRoom(targetRoomId, socket.id);
+    const leavingIndex = room.players.findIndex((player) => player.id === socket.id);
+    if (leavingIndex >= 0) room.players.splice(leavingIndex, 1);
+
+    if (room.players.length === 0) {
+      rooms.delete(targetRoomId);
+      socket.data.roomId = null;
+      return;
+    }
+
+    if (room.ownerId === socket.id) {
+      room.ownerId = room.players[0].id;
+    }
+
+    resetRoomForLobby(room);
     socket.leave(targetRoomId);
     socket.data.roomId = null;
+    broadcastRoom(room);
   });
 
   socket.on("game:playCard", ({ roomId, cardId } = {}) => {
@@ -303,6 +311,7 @@ io.on("connection", (socket) => {
 
     const playerIndex = room.players.findIndex((player) => player.id === socket.id);
     if (playerIndex === -1 || room.phase !== "playing") return;
+
     if (room.turnIndex !== playerIndex) {
       socket.emit("room:error", "現在不是你的回合。");
       return;
